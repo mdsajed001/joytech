@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design System — Token Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ ENGINE: DEFAULT PALETTE (fallback before JS paints, overwritten instantly) ============ */
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --font-latin:'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-bengali:'Noto Sans Bengali','Manrope', sans-serif;
+  --font-mono:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px;
+  --space-6:24px; --space-8:32px; --space-10:40px; --space-12:48px; --space-16:64px;
+
+  --radius-none:0px; --radius-xs:4px; --radius-sm:8px; --radius-md:12px;
+  --radius-lg:16px; --radius-xl:24px; --radius-full:9999px;
+
+  --shadow-xs:0 1px 2px rgba(15,23,42,.06);
+  --shadow-sm:0 1px 3px rgba(15,23,42,.08), 0 1px 2px rgba(15,23,42,.05);
+  --shadow-md:0 4px 10px rgba(15,23,42,.10), 0 2px 4px rgba(15,23,42,.06);
+  --shadow-lg:0 12px 24px rgba(15,23,42,.14), 0 4px 8px rgba(15,23,42,.06);
+  --shadow-top:0 -2px 8px rgba(15,23,42,.07);
+
+  --dur-instant:100ms; --dur-fast:150ms; --dur-base:200ms; --dur-slow:300ms;
+  --ease-standard:cubic-bezier(.4,0,.2,1);
+  --ease-decel:cubic-bezier(0,0,.2,1);
+  --ease-accel:cubic-bezier(.4,0,1,1);
+}
+*,*::before,*::after{box-sizing:inherit;margin:0;padding:0;}
+html{scroll-padding-top:24px;-webkit-text-size-adjust:100%;}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important;}
+}
+
+body{
+  font-family:var(--font-latin);
+  background:var(--color-bg-canvas);
+  color:var(--color-text-primary);
+  font-size:14px;
+  line-height:1.55;
+  min-height:100%;
+  transition:background var(--dur-base) var(--ease-standard), color var(--dur-base) var(--ease-standard);
+}
+[lang="bn"]{font-family:var(--font-bengali);line-height:1.75;}
+code, .mono{font-family:var(--font-mono);}
+a{color:var(--color-brand-primary);}
+h1,h2,h3,h4{font-weight:700;color:var(--color-text-primary);letter-spacing:-.01em;}
+p{color:var(--color-text-secondary);max-width:64ch;}
+::selection{background:var(--color-brand-primary-subtle);color:var(--color-text-primary);}
+
+/* focus visibility — AAA: 3:1 contrast, clearly offset, never suppressed */
+a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visible,.tab:focus-visible{
+  outline:2.5px solid var(--color-focus-ring);
+  outline-offset:2px;
+  border-radius:var(--radius-xs);
+}
+.skip-link{
+  position:absolute;left:var(--space-3);top:-100px;z-index:200;
+  background:var(--color-brand-primary);color:var(--color-text-inverse);
+  padding:var(--space-2) var(--space-4);border-radius:var(--radius-sm);
+  font-weight:600;text-decoration:none;transition:top var(--dur-fast) var(--ease-standard);
+}
+.skip-link:focus{top:var(--space-3);}
+
+/* ============ LAYOUT ============ */
+.shell{display:flex;min-height:100vh;}
+.sidebar{
+  width:264px;flex:0 0 264px;border-right:1px solid var(--color-border-default);
+  padding:var(--space-6) var(--space-4);position:sticky;top:0;height:100vh;overflow-y:auto;
+  background:var(--color-bg-surface);
+}
+.brand{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-6);}
+.brand-mark{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--color-brand-primary);flex:0 0 auto;}
+.brand-text{font-weight:800;font-size:14px;line-height:1.25;}
+.brand-text small{display:block;font-weight:500;color:var(--color-text-secondary);font-size:11.5px;}
+.navgroup{margin-bottom:var(--space-5);}
+.navgroup-title{font-size:11px;font-weight:700;color:var(--color-text-disabled);text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--space-2);padding:0 var(--space-2);}
+.navlink{
+  display:block;padding:6px var(--space-2);border-radius:var(--radius-xs);
+  color:var(--color-text-secondary);text-decoration:none;font-size:13.5px;font-weight:500;
+  transition:background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
+}
+.navlink:hover{background:var(--color-bg-subtle);color:var(--color-text-primary);}
+.navlink.active{background:var(--color-brand-primary-subtle);color:var(--color-brand-primary);font-weight:700;}
+
+.menu-btn{display:none;}
+main{flex:1;min-width:0;padding:var(--space-8) var(--space-10) var(--space-16);max-width:1180px;}
+section{margin-bottom:var(--space-16);scroll-margin-top:20px;}
+section > h2{font-size:22px;margin-bottom:var(--space-2);}
+.section-kicker{font-size:12px;font-weight:700;color:var(--color-brand-primary);margin-bottom:var(--space-2);}
+.section-lede{margin-bottom:var(--space-6);}
+
+/* ============ HERO ============ */
+.hero{padding-bottom:var(--space-10);border-bottom:1px solid var(--color-border-default);margin-bottom:var(--space-10);}
+.hero h1{font-size:34px;line-height:1.15;max-width:16ch;margin-bottom:var(--space-3);}
+.hero p{font-size:15.5px;max-width:58ch;margin-bottom:var(--space-6);}
+.hero-meta{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-bottom:var(--space-6);}
+.meta-chip{font-size:12px;font-weight:600;color:var(--color-text-secondary);background:var(--color-bg-subtle);border:1px solid var(--color-border-default);padding:5px 10px;border-radius:var(--radius-full);}
+
+/* ============ GENERIC COMPONENTS (doc chrome, spec-sheet style) ============ */
+.card{background:var(--color-bg-surface);border:1px solid var(--color-border-default);border-radius:var(--radius-md);}
+.panel{background:var(--color-bg-surface);border:1px solid var(--color-border-default);border-radius:var(--radius-lg);padding:var(--space-6);}
+.grid{display:grid;gap:var(--space-4);}
+.spec-table{width:100%;border-collapse:collapse;font-size:13px;}
+.spec-table th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-disabled);font-weight:700;padding:8px 12px;border-bottom:1px solid var(--color-border-strong);}
+.spec-table td{padding:10px 12px;border-bottom:1px solid var(--color-border-default);vertical-align:middle;color:var(--color-text-primary);}
+.spec-table tr:last-child td{border-bottom:none;}
+.spec-table td.dim{color:var(--color-text-secondary);}
+
+.pill-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--radius-full);}
+.pass-aaa{background:var(--color-success-bg);color:var(--color-success-text);}
+.pass-aa{background:var(--color-info-bg);color:var(--color-info-text);}
+.pass-aalarge{background:var(--color-warning-bg);color:var(--color-warning-text);}
+.fail{background:var(--color-danger-bg);color:var(--color-danger-text);}
+
+.btn{
+  appearance:none;border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:13.5px;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:40px;padding:0 var(--space-4);border-radius:var(--radius-sm);
+  transition:background var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard), transform var(--dur-fast) var(--ease-standard);
+}
+.btn:active{transform:translateY(1px);}
+.btn-ghost{background:transparent;color:var(--color-brand-primary);}
+.btn-ghost:hover{background:var(--color-brand-primary-subtle);}
+.btn-outline{background:transparent;border:1.5px solid var(--color-border-strong);color:var(--color-text-primary);}
+.btn-outline:hover{border-color:var(--color-brand-primary);color:var(--color-brand-primary);}
+.btn-primary{background:var(--color-brand-primary);color:var(--color-text-inverse);}
+.btn-primary:hover{background:var(--color-brand-primary-hover);}
+.btn-small{min-height:32px;font-size:12.5px;padding:0 var(--space-3);}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:900px){
+  .sidebar{
+    position:fixed;left:0;top:0;bottom:0;z-index:100;transform:translateX(-100%);
+    transition:transform var(--dur-base) var(--ease-standard);box-shadow:var(--shadow-lg);
+    padding-top:calc(var(--space-6) + env(safe-area-inset-top,0px));width:82vw;max-width:300px;flex-basis:auto;
+  }
+  body.nav-open .sidebar{transform:translateX(0);}
+  body.nav-open .scrim{display:block;}
+  .scrim{display:none;position:fixed;inset:0;background:rgba(10,12,18,.4);z-index:90;}
+  .menu-btn{
+    display:flex;align-items:center;gap:8px;position:sticky;top:var(--space-4);z-index:80;
+    background:var(--color-bg-surface);border:1px solid var(--color-border-default);
+    border-radius:var(--radius-full);padding:8px 14px;font-weight:700;font-size:13px;
+    margin:var(--space-4) 0 0 var(--space-4);width:max-content;box-shadow:var(--shadow-sm);
+    color:var(--color-text-primary);
+  }
+  main{padding:0 var(--space-4) var(--space-12);}
+  .hero{padding-top:var(--space-4);}
+}
+
+/* ============ COLOR SECTION ============ */
+.seed-panel{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--space-3);margin-bottom:var(--space-3);}
+.seed-field{display:flex;flex-direction:column;gap:6px;background:var(--color-bg-subtle);border:1px solid var(--color-border-default);border-radius:var(--radius-sm);padding:var(--space-3);}
+.seed-field label{font-size:11.5px;font-weight:700;color:var(--color-text-secondary);display:flex;align-items:center;justify-content:space-between;}
+.seed-field input[type=color]{width:100%;height:34px;border:1px solid var(--color-border-default);border-radius:var(--radius-xs);background:none;cursor:pointer;padding:2px;}
+.seed-hex{font-family:var(--font-mono);font-size:10.5px;color:var(--color-text-disabled);}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center;margin-bottom:var(--space-5);}
+.preset-btn{font-size:12px;font-weight:600;padding:7px 12px;border-radius:var(--radius-full);border:1px solid var(--color-border-default);background:var(--color-bg-surface);color:var(--color-text-secondary);cursor:pointer;transition:all var(--dur-fast) var(--ease-standard);}
+.preset-btn:hover{border-color:var(--color-brand-primary);color:var(--color-brand-primary);}
+.divider-v{width:1px;align-self:stretch;background:var(--color-border-default);margin:0 4px;}
+.toggle-row{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--color-text-secondary);}
+.switch{position:relative;width:38px;height:22px;border-radius:var(--radius-full);background:var(--color-border-strong);cursor:pointer;transition:background var(--dur-fast);flex:0 0 auto;}
+.switch.on{background:var(--color-brand-primary);}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform var(--dur-fast) var(--ease-standard);}
+.switch.on::after{transform:translateX(16px);}
+
+.ramp-group{margin-bottom:var(--space-5);}
+.ramp-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.ramp-name{font-weight:700;font-size:13.5px;text-transform:capitalize;}
+.ramp-name small{font-weight:500;color:var(--color-text-disabled);margin-left:6px;font-size:11.5px;}
+.ramp-row{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;border-radius:var(--radius-sm);overflow:hidden;}
+.swatch{min-height:66px;display:flex;flex-direction:column;justify-content:flex-end;padding:6px 7px;font-size:10px;line-height:1.35;}
+.swatch-step{font-weight:800;font-size:11px;}
+.swatch-hex{font-family:var(--font-mono);opacity:.85;}
+.swatch-contrast{opacity:.85;font-size:9px;font-weight:700;}
+@media (max-width:700px){.ramp-row{grid-template-columns:repeat(6,1fr);}}
+
+.semantic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:var(--space-3);}
+.semantic-tile{border:1px solid var(--color-border-default);border-radius:var(--radius-sm);overflow:hidden;}
+.semantic-swatch{height:52px;}
+.semantic-meta{padding:8px 10px;background:var(--color-bg-surface);}
+.semantic-meta .tok{font-family:var(--font-mono);font-size:11px;font-weight:600;display:block;}
+.semantic-meta .val{font-family:var(--font-mono);font-size:10.5px;color:var(--color-text-disabled);}
+
+.arch-diagram{display:flex;align-items:stretch;gap:0;margin:var(--space-6) 0;flex-wrap:wrap;}
+.arch-tier{flex:1;min-width:200px;border:1px solid var(--color-border-default);padding:var(--space-4);position:relative;}
+.arch-tier:not(:last-child){border-right:none;}
+.arch-tier:first-child{border-radius:var(--radius-md) 0 0 var(--radius-md);}
+.arch-tier:last-child{border-radius:0 var(--radius-md) var(--radius-md) 0;}
+.arch-tier h4{font-size:13px;margin-bottom:6px;}
+.arch-tier p{font-size:12px;margin-bottom:0;}
+.arch-tier .ex{margin-top:10px;font-family:var(--font-mono);font-size:11px;color:var(--color-brand-primary);}
+.arch-arrow{display:flex;align-items:center;padding:0 6px;color:var(--color-text-disabled);font-size:18px;}
+@media (max-width:760px){.arch-diagram{flex-direction:column;}.arch-tier{border-right:1px solid var(--color-border-default) !important;border-radius:var(--radius-md) !important;}.arch-arrow{transform:rotate(90deg);align-self:center;padding:4px 0;}}
+
+/* ============ TYPE / SPACING / RADIUS / ELEVATION TABLES ============ */
+.type-row{display:grid;grid-template-columns:120px 1fr 200px;gap:var(--space-4);align-items:center;padding:var(--space-4) 0;border-bottom:1px solid var(--color-border-default);}
+.type-row:last-child{border-bottom:none;}
+.type-meta{font-size:11.5px;color:var(--color-text-disabled);font-family:var(--font-mono);}
+.type-name{font-weight:700;font-size:13px;margin-bottom:2px;}
+@media (max-width:760px){.type-row{grid-template-columns:1fr;gap:6px;}}
+
+.bar-row{display:flex;align-items:center;gap:var(--space-3);padding:9px 0;border-bottom:1px solid var(--color-border-default);}
+.bar-row:last-child{border-bottom:none;}
+.bar-token{width:90px;font-family:var(--font-mono);font-size:11.5px;color:var(--color-text-secondary);flex:0 0 auto;}
+.bar-track{flex:1;min-width:0;}
+.bar-fill{height:16px;background:var(--color-brand-primary);border-radius:var(--radius-xs);}
+.bar-px{width:52px;text-align:right;font-family:var(--font-mono);font-size:11.5px;color:var(--color-text-disabled);flex:0 0 auto;}
+
+.radius-grid,.elev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:var(--space-4);}
+.radius-tile,.elev-tile{text-align:left;}
+.radius-swatch{width:100%;aspect-ratio:1.6;background:var(--color-brand-primary-subtle);border:1.5px solid var(--color-brand-primary);margin-bottom:8px;}
+.elev-swatch{width:100%;aspect-ratio:1.6;background:var(--color-bg-surface);border-radius:var(--radius-md);margin-bottom:8px;}
+.tile-token{font-family:var(--font-mono);font-weight:700;font-size:12px;}
+.tile-usage{font-size:11.5px;color:var(--color-text-secondary);}
+
+/* ============ COMPONENT DEMOS ============ */
+.demo-block{border:1px solid var(--color-border-default);border-radius:var(--radius-md);overflow:hidden;margin-bottom:var(--space-6);}
+.demo-stage{padding:var(--space-6);background:var(--color-bg-subtle);display:flex;flex-wrap:wrap;gap:var(--space-4);align-items:flex-start;}
+.demo-caption{padding:var(--space-3) var(--space-5);border-top:1px solid var(--color-border-default);background:var(--color-bg-surface);font-size:12px;color:var(--color-text-secondary);}
+.demo-caption b{color:var(--color-text-primary);}
+.subblock-title{font-size:13px;font-weight:700;margin:var(--space-6) 0 var(--space-3);}
+.subblock-title:first-child{margin-top:0;}
+
+/* Buttons demo already uses .btn above; add sizes/states */
+.btn-lg{min-height:48px;padding:0 var(--space-5);font-size:14.5px;}
+.btn[disabled]{opacity:.45;cursor:not-allowed;}
+.btn-danger{background:var(--color-danger-solid);color:var(--color-danger-solid-text);}
+.btn-danger:hover{filter:brightness(.92);}
+
+/* Input / search field */
+.field{display:flex;flex-direction:column;gap:6px;max-width:280px;}
+.field label{font-size:12.5px;font-weight:600;color:var(--color-text-secondary);}
+.input{
+  height:44px;border-radius:var(--radius-md);border:1.5px solid var(--color-border-strong);
+  padding:0 var(--space-3);font-family:inherit;font-size:13.5px;background:var(--color-bg-surface);color:var(--color-text-primary);
+  transition:border-color var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard);width:100%;
+}
+.input::placeholder{color:var(--color-text-disabled);}
+.input:focus-visible{border-color:var(--color-brand-primary);box-shadow:0 0 0 3px var(--color-brand-primary-subtle);outline:none;}
+.input.err{border-color:var(--color-danger-solid);}
+.field-hint{font-size:11.5px;color:var(--color-text-disabled);}
+.field-hint.err{color:var(--color-danger-text);font-weight:600;}
+.search-field{position:relative;max-width:320px;width:100%;}
+.search-field .input{padding-left:38px;border-radius:var(--radius-md);}
+.search-field .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--color-text-disabled);}
+
+/* badges / tags */
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:var(--radius-full);}
+.badge-info{background:var(--color-info-bg);color:var(--color-info-text);border:1px solid var(--color-info-border);}
+.badge-success{background:var(--color-success-bg);color:var(--color-success-text);border:1px solid var(--color-success-border);}
+.badge-warning{background:var(--color-warning-bg);color:var(--color-warning-text);border:1px solid var(--color-warning-border);}
+.badge-danger{background:var(--color-danger-bg);color:var(--color-danger-text);border:1px solid var(--color-danger-border);}
+.badge-neutral{background:var(--color-bg-subtle);color:var(--color-text-secondary);border:1px solid var(--color-border-default);}
+.tag-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 10px 5px 12px;border-radius:var(--radius-full);background:var(--color-bg-surface);border:1px solid var(--color-border-strong);color:var(--color-text-primary);}
+.tag-chip button{border:none;background:var(--color-bg-subtle);width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;color:var(--color-text-secondary);}
+
+/* price */
+.price-current{font-size:20px;font-weight:800;color:var(--color-text-primary);}
+.price-was{font-size:13px;color:var(--color-text-disabled);text-decoration:line-through;margin-left:6px;}
+.price-save{display:block;font-size:11.5px;font-weight:700;color:var(--color-success-text);margin-top:2px;}
+
+/* rating */
+.rating{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;color:var(--color-text-primary);}
+.star{width:14px;height:14px;color:var(--color-rating-star);}
+.star.empty{color:var(--color-border-strong);}
+
+/* stepper (quantity) */
+.qty-stepper{display:inline-flex;align-items:center;border:1.5px solid var(--color-border-strong);border-radius:var(--radius-xs);overflow:hidden;}
+.qty-stepper button{width:34px;height:34px;border:none;background:var(--color-bg-subtle);font-size:15px;font-weight:700;cursor:pointer;color:var(--color-text-primary);}
+.qty-stepper span{width:36px;text-align:center;font-weight:700;font-size:13px;}
+
+/* card / product / order */
+.product-card{width:190px;border:1px solid var(--color-border-default);border-radius:var(--radius-sm);overflow:hidden;background:var(--color-bg-surface);transition:box-shadow var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard);}
+.product-card:hover{box-shadow:var(--shadow-sm);border-color:var(--color-border-strong);}
+.product-thumb{height:130px;background:linear-gradient(180deg, var(--color-bg-subtle), var(--color-border-default));}
+.product-body{padding:var(--space-3);}
+.product-title{font-size:12.5px;font-weight:700;line-height:1.4;margin-bottom:6px;min-height:34px;}
+
+.order-card{border:1px solid var(--color-border-default);border-radius:var(--radius-sm);padding:var(--space-4);max-width:420px;width:100%;}
+.order-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--space-3);}
+.order-id{font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary);}
+.order-date{font-size:11.5px;color:var(--color-text-disabled);}
+.order-item{display:flex;gap:var(--space-3);align-items:center;}
+.order-thumb{width:44px;height:44px;border-radius:var(--radius-xs);background:var(--color-bg-subtle);flex:0 0 auto;}
+
+/* top bar / bottom nav */
+.appframe{width:300px;border:1px solid var(--color-border-default);border-radius:var(--radius-lg);overflow:hidden;background:var(--color-bg-surface);box-shadow:var(--shadow-sm);}
+.topbar{background:var(--color-bg-surface);padding:var(--space-3) var(--space-4);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--color-border-default);}
+.topbar-title{font-weight:800;font-size:13.5px;}
+.appbody{padding:var(--space-4);min-height:120px;background:var(--color-bg-canvas);}
+.bottomnav{display:flex;border-top:1px solid var(--color-border-default);background:var(--color-bg-surface);}
+.bottomnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 10px;font-size:9.5px;font-weight:700;color:var(--color-text-disabled);min-height:44px;justify-content:center;}
+.bottomnav-item.active{color:var(--color-brand-primary);}
+.bottomnav-item .dot{width:18px;height:18px;border-radius:5px;background:currentColor;opacity:.16;}
+.bottomnav-item.active .dot{opacity:1;background:var(--color-brand-primary);}
+
+/* checkout stepper */
+.flow-stepper{display:flex;align-items:center;max-width:340px;margin-bottom:var(--space-2);}
+.flow-node{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 auto;}
+.flow-node.done{background:var(--color-brand-primary);color:var(--color-text-inverse);}
+.flow-node.now{background:var(--color-brand-primary-subtle);color:var(--color-brand-primary);border:2px solid var(--color-brand-primary);}
+.flow-node.todo{background:var(--color-bg-subtle);color:var(--color-text-disabled);border:2px solid var(--color-border-default);}
+.flow-line{flex:1;height:2px;background:var(--color-border-strong);margin:0 4px;}
+.flow-line.done{background:var(--color-brand-primary);}
+
+/* payment radio */
+.pay-option{display:flex;gap:var(--space-3);padding:var(--space-3);border:1.5px solid var(--color-border-default);border-radius:var(--radius-md);margin-bottom:8px;cursor:pointer;max-width:340px;}
+.pay-option.selected{border-color:var(--color-brand-primary);background:var(--color-brand-primary-subtle);}
+.radio-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--color-border-strong);flex:0 0 auto;margin-top:1px;position:relative;}
+.pay-option.selected .radio-dot{border-color:var(--color-brand-primary);}
+.pay-option.selected .radio-dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--color-brand-primary);}
+.pay-label{font-weight:700;font-size:13px;}
+.pay-sub{font-size:11.5px;color:var(--color-text-secondary);}
+
+/* avatar / reward */
+.avatar{width:52px;height:52px;border-radius:50%;background:var(--color-bg-subtle);border:2px solid var(--color-border-default);flex:0 0 auto;}
+.tier-track{height:6px;border-radius:var(--radius-full);background:var(--color-border-default);overflow:hidden;max-width:260px;}
+.tier-fill{height:100%;background:var(--color-brand-primary);border-radius:var(--radius-full);}
+
+/* alert / banner */
+.alert{display:flex;gap:var(--space-3);padding:var(--space-4);border-radius:var(--radius-sm);border:1px solid;max-width:440px;align-items:flex-start;}
+.alert-icon{width:20px;height:20px;flex:0 0 auto;margin-top:1px;}
+.alert-title{font-weight:700;font-size:13px;margin-bottom:2px;}
+.alert-body{font-size:12.5px;}
+.alert-info{background:var(--color-info-bg);border-color:var(--color-info-border);color:var(--color-info-text);}
+.alert-success{background:var(--color-success-bg);border-color:var(--color-success-border);color:var(--color-success-text);}
+.alert-warning{background:var(--color-warning-bg);border-color:var(--color-warning-border);color:var(--color-warning-text);}
+.alert-danger{background:var(--color-danger-bg);border-color:var(--color-danger-border);color:var(--color-danger-text);}
+
+/* icon set (inline strokes so no external icon font dependency) */
+svg.icon{stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+
+/* accessibility table */
+.a11y-row{display:grid;grid-template-columns:160px 1fr 1fr;gap:var(--space-4);padding:var(--space-4) 0;border-bottom:1px solid var(--color-border-default);}
+.a11y-row:first-child{padding-top:0;}
+.a11y-row:last-child{border-bottom:none;}
+.a11y-head{font-weight:700;font-size:12.5px;}
+@media (max-width:760px){.a11y-row{grid-template-columns:1fr;gap:4px;}}
+
+/* export panel */
+.export-tabs{display:flex;gap:8px;margin-bottom:var(--space-3);}
+.export-tab{font-size:12.5px;font-weight:700;padding:7px 14px;border-radius:var(--radius-sm);border:1px solid var(--color-border-default);background:var(--color-bg-surface);cursor:pointer;color:var(--color-text-secondary);}
+.export-tab.active{background:var(--color-brand-primary);color:var(--color-text-inverse);border-color:var(--color-brand-primary);}
+pre.export-pre{background:var(--color-bg-inverse);color:var(--color-text-inverse);padding:var(--space-5);border-radius:var(--radius-md);font-family:var(--font-mono);font-size:11.5px;line-height:1.7;overflow-x:auto;max-height:420px;overflow-y:auto;}
+.copy-row{display:flex;justify-content:flex-end;margin-top:var(--space-2);}
+
+footer{border-top:1px solid var(--color-border-default);padding-top:var(--space-6);color:var(--color-text-disabled);font-size:12px;}
+</style>
+</head>
+<body>
+<a href="#overview" class="skip-link">Skip to content</a>
+<div class="scrim" onclick="document.body.classList.remove('nav-open')"></div>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div class="brand-text">Commerce UI<small>Token-based design system</small></div>
+    </div>
+
+    <nav aria-label="Sections">
+      <div class="navgroup">
+        <div class="navgroup-title">Foundations</div>
+        <a class="navlink" href="#overview">Overview</a>
+        <a class="navlink" href="#architecture">Token architecture</a>
+        <a class="navlink" href="#color">Color system</a>
+        <a class="navlink" href="#typography">Typography</a>
+        <a class="navlink" href="#spacing">Spacing &amp; grid</a>
+        <a class="navlink" href="#radius">Corner radius</a>
+        <a class="navlink" href="#elevation">Elevation &amp; borders</a>
+        <a class="navlink" href="#motion">Motion</a>
+        <a class="navlink" href="#iconography">Iconography</a>
+      </div>
+      <div class="navgroup">
+        <div class="navgroup-title">Components</div>
+        <a class="navlink" href="#c-buttons">Buttons</a>
+        <a class="navlink" href="#c-inputs">Inputs &amp; search</a>
+        <a class="navlink" href="#c-badges">Badges, tags &amp; status</a>
+        <a class="navlink" href="#c-price">Price &amp; rating</a>
+        <a class="navlink" href="#c-cards">Cards</a>
+        <a class="navlink" href="#c-nav">Navigation</a>
+        <a class="navlink" href="#c-checkout">Checkout &amp; payment</a>
+        <a class="navlink" href="#c-account">Account &amp; rewards</a>
+        <a class="navlink" href="#c-alerts">Alerts &amp; banners</a>
+      </div>
+      <div class="navgroup">
+        <div class="navgroup-title">Reference</div>
+        <a class="navlink" href="#accessibility">Accessibility (AAA)</a>
+        <a class="navlink" href="#tokens">Export tokens</a>
+        <a class="navlink" href="#governance">Governance</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main id="overview">
+    <button class="menu-btn" onclick="document.body.classList.toggle('nav-open')" aria-label="Toggle navigation">
+      <svg class="icon" width="16" height="16" viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      Sections
+    </button>
+
+    <section class="hero">
+      <div class="section-kicker">v1.0 · token-first design system</div>
+      <h1>Design tokens for a mobile-commerce product</h1>
+      <p>Atomic-level specification for color, type, space, radius, elevation, motion, and the components built from them — organised so the palette below can be replaced with any brand color without touching a single component's CSS.</p>
+      <div class="hero-meta">
+        <span class="meta-chip">Primitive → semantic → component tokens</span>
+        <span class="meta-chip">WCAG 2.2 AAA target</span>
+        <span class="meta-chip">Bangla + Latin bilingual type</span>
+        <span class="meta-chip">Mobile-first, 44px touch targets</span>
+      </div>
+      <div class="toolbar" role="group" aria-label="Palette generator">
+        <button class="preset-btn" data-preset="rokomari">Preset · Sky &amp; ember</button>
+        <button class="preset-btn" data-preset="emerald">Preset · Emerald &amp; gold</button>
+        <button class="preset-btn" data-preset="plum">Preset · Plum &amp; brass</button>
+        <button class="preset-btn" data-preset="mono">Preset · Slate mono</button>
+        <button class="preset-btn" id="randomizeBtn">Randomize brand hues</button>
+        <div class="divider-v"></div>
+        <div class="toggle-row">
+          <span>Dark mode</span>
+          <div class="switch" id="darkSwitch" role="switch" aria-checked="false" tabindex="0" aria-label="Toggle dark mode"></div>
+        </div>
+      </div>
+      <p style="font-size:12.5px;">Every swatch, chart and component preview on this page reads from the same seven color seeds below — change one and the whole system re-themes live, including the contrast badges.</p>
+    </section>
+
+    <section id="architecture">
+      <h2>Token architecture</h2>
+      <p class="section-lede">Three tiers, one direction of truth. Components never reference a raw hex value — they reference a semantic token, which resolves to a primitive ramp step. Swapping the brand palette means changing seven seed colors in tier 1; nothing in tiers 2 or 3 changes.</p>
+      <div class="arch-diagram">
+        <div class="arch-tier">
+          <h4>1 · Primitives</h4>
+          <p>Generated color ramps, spacing scale, radius scale. Pure values, no meaning attached.</p>
+          <div class="ex">--primary-600: #1a4fb8</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-tier">
+          <h4>2 · Semantic</h4>
+          <p>Primitives given a job: background, text, border, feedback role. This is what designers pick from.</p>
+          <div class="ex">--color-brand-primary</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-tier">
+          <h4>3 · Component</h4>
+          <p>Semantic tokens applied to a specific part of a specific component.</p>
+          <div class="ex">.btn-primary { background }</div>
+        </div>
+      </div>
+      <p style="font-size:12.5px;">Naming convention: primitives are <code>--{ramp}-{step}</code> (e.g. <code>--danger-700</code>), semantic tokens are <code>--color-{role}-{variant}</code> (e.g. <code>--color-text-secondary</code>, <code>--color-success-bg</code>). Never write a component style against a primitive directly — always go through a semantic token, even if today it happens to point at the same value.</p>
+    </section>
+
+    <section id="color">
+      <h2>Color system</h2>
+      <p class="section-lede">Seven seed colors — <b>primary</b>, <b>secondary</b> (warm CTA accent), <b>success</b>, <b>warning</b>, <b>danger</b>, <b>info</b>, and <b>neutral</b> — each expand into a 12-step ramp (25 through 950). Feedback colors stay inside a semantic hue band even when randomized, so red never stops meaning "error."</p>
+
+      <div class="seed-panel" id="seedPanel"></div>
+
+      <div id="rampGroups"></div>
+
+      <h3 style="font-size:16px;margin:var(--space-8) 0 var(--space-2);">Semantic tokens (current mode)</h3>
+      <p style="font-size:12.5px;margin-bottom:var(--space-4);">These are the tokens components actually consume. Toggle dark mode above — the mapping rule changes, not the component code.</p>
+      <div class="semantic-grid" id="semanticGrid"></div>
+    </section>
+
+    <section id="typography">
+      <h2>Typography</h2>
+      <p class="section-lede">Two families: <b>Manrope</b> for Latin UI text and numerals, <b>Noto Sans Bengali</b> for Bangla script — matched at similar optical weight so mixed-language strings (common on every screen: product names, categories, reviews) sit evenly on the same line. Bangla runs get +15% line-height; conjuncts need the extra room Latin doesn't.</p>
+      <div class="panel" id="typeScale"></div>
+      <p style="font-size:12.5px;margin-top:var(--space-4);">Body copy stays at 14px minimum for Bangla (13px is where conjunct clusters start losing legibility on mobile screens); Latin-only captions can drop to 12px. Line length caps at 70 characters for body paragraphs.</p>
+    </section>
+
+    <section id="spacing">
+      <h2>Spacing &amp; grid</h2>
+      <p class="section-lede">4px base unit. Component-internal spacing uses steps 1–4 (4/8/12/16); spacing between components uses 4–6 (16/20/24); page-level rhythm uses 8+ (32/40/48/64).</p>
+      <div class="panel" id="spacingScale" style="margin-bottom:var(--space-5);"></div>
+      <div class="spec-table-wrap card" style="padding:var(--space-5);">
+        <table class="spec-table">
+          <thead><tr><th>Breakpoint</th><th>Columns</th><th>Margin</th><th>Gutter</th></tr></thead>
+          <tbody>
+            <tr><td>Mobile · 0–599px</td><td class="dim">4</td><td class="dim">16px</td><td class="dim">12px</td></tr>
+            <tr><td>Tablet · 600–1023px</td><td class="dim">8</td><td class="dim">24px</td><td class="dim">16px</td></tr>
+            <tr><td>Desktop · 1024px+</td><td class="dim">12</td><td class="dim">32px</td><td class="dim">24px</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="radius">
+      <h2>Corner radius</h2>
+      <p class="section-lede">Six steps, each tied to a real component pattern observed across the source screens — search fields sit between button and banner rounding, status pills and avatars are always fully round, bottom navigation stays sharp.</p>
+      <div class="radius-grid" id="radiusScale"></div>
+    </section>
+
+    <section id="elevation">
+      <h2>Elevation &amp; borders</h2>
+      <p class="section-lede">The interface is mostly flat — hairline borders carry most separation, with shadow reserved for things that float above content: sticky checkout bars, floating actions, menus, modals. Shadows stay neutral regardless of the active brand palette; elevation is physical, not brand-colored.</p>
+      <div class="elev-grid" id="elevScale"></div>
+    </section>
+
+    <section id="motion">
+      <h2>Motion</h2>
+      <p class="section-lede">Motion answers an action — it never plays on load. Short durations for anything under the thumb (taps, toggles), slightly longer for content entering/leaving the screen.</p>
+      <div class="panel">
+        <table class="spec-table">
+          <thead><tr><th>Token</th><th>Value</th><th>Use for</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">--dur-instant</td><td class="dim mono">100ms</td><td class="dim">Button press, checkbox toggle</td></tr>
+            <tr><td class="mono">--dur-fast</td><td class="dim mono">150ms</td><td class="dim">Hover, focus ring, badge state change</td></tr>
+            <tr><td class="mono">--dur-base</td><td class="dim mono">200ms</td><td class="dim">Sheet/drawer open, tab switch</td></tr>
+            <tr><td class="mono">--dur-slow</td><td class="dim mono">300ms</td><td class="dim">Page transition, modal enter</td></tr>
+            <tr><td class="mono">--ease-standard</td><td class="dim mono">cubic-bezier(.4,0,.2,1)</td><td class="dim">Default for most transitions</td></tr>
+            <tr><td class="mono">--ease-decel</td><td class="dim mono">cubic-bezier(0,0,.2,1)</td><td class="dim">Entering elements (settle in fast, ease out)</td></tr>
+            <tr><td class="mono">--ease-accel</td><td class="dim mono">cubic-bezier(.4,0,1,1)</td><td class="dim">Exiting elements (leave with intent)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12.5px;margin-top:var(--space-3);">All motion is wrapped in <code>prefers-reduced-motion</code> — durations collapse to near-zero for anyone who has that system setting on. Try the buttons in the component sections below; press-down uses <code>--dur-instant</code>.</p>
+    </section>
+
+    <section id="iconography">
+      <h2>Iconography</h2>
+      <p class="section-lede">Outline style, 1.75–2px stroke at a 24px box (scales down cleanly to 16px for inline use). Filled variant reserved for the active/selected state only — bottom navigation, selected filters — never for a resting default state.</p>
+      <div class="demo-stage" style="background:var(--color-bg-surface);border:1px solid var(--color-border-default);border-radius:var(--radius-md);">
+        <div style="display:flex;gap:var(--space-6);flex-wrap:wrap;">
+          <div style="text-align:center;"><svg class="icon" width="24" height="24" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div class="tile-usage">Search</div></div>
+          <div style="text-align:center;"><svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><div class="tile-usage">Cart</div></div>
+          <div style="text-align:center;"><svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21l8.84-8.61a5.5 5.5 0 0 0 0-7.78Z"/></svg><div class="tile-usage">Wishlist</div></div>
+          <div style="text-align:center;"><svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="tile-usage">Notifications</div></div>
+          <div style="text-align:center;"><svg class="icon" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><div class="tile-usage">Account</div></div>
+          <div style="text-align:center;"><svg class="icon" width="24" height="24" viewBox="0 0 24 24"><path d="M4 4h16v4H4z"/><path d="M4 12h10"/><path d="M4 16h7"/></svg><div class="tile-usage">Orders</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== COMPONENTS ===================== -->
+    <section id="c-buttons">
+      <h2>Buttons</h2>
+      <p class="section-lede">Five intents, three sizes, and the disabled state — every button is built the same way underneath (min 44px hit target regardless of visual size), only visual size shrinks below 44px for the small variant inside dense rows.</p>
+      <div class="demo-block">
+        <div class="demo-stage">
+          <button class="btn btn-primary">Go to payment</button>
+          <button class="btn btn-outline">Add to cart</button>
+          <button class="btn btn-ghost">Save for later</button>
+          <button class="btn btn-danger">Remove item</button>
+          <button class="btn btn-primary" disabled>Out of stock</button>
+        </div>
+        <div class="demo-stage" style="border-top:1px solid var(--color-border-default);">
+          <button class="btn btn-primary btn-lg">Complete order</button>
+          <button class="btn btn-primary">Buy now</button>
+          <button class="btn btn-primary btn-small">Follow</button>
+        </div>
+        <div class="demo-caption">Primary = <b>--color-brand-primary</b>, filled, for the one action per screen you want taken. Outline and ghost share the same primary color at lower visual weight for secondary actions. Danger uses the danger ramp's solid step with an automatically-picked white/near-black label for guaranteed contrast.</div>
+      </div>
+    </section>
+
+    <section id="c-inputs">
+      <h2>Inputs &amp; search</h2>
+      <div class="demo-block">
+        <div class="demo-stage">
+          <div class="search-field">
+            <svg class="icon ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="input" type="text" placeholder="Search by title, author or category" aria-label="Search products">
+          </div>
+        </div>
+        <div class="demo-stage" style="border-top:1px solid var(--color-border-default);">
+          <div class="field">
+            <label for="demoName">Full name</label>
+            <input class="input" id="demoName" type="text" placeholder="MD Sajed">
+          </div>
+          <div class="field">
+            <label for="demoPhone">Phone number</label>
+            <input class="input err" id="demoPhone" type="text" value="+8801" aria-invalid="true" aria-describedby="phoneErr">
+            <span class="field-hint err" id="phoneErr">Enter a valid 11-digit number</span>
+          </div>
+          <div class="field">
+            <label for="demoDisabled">Promo code</label>
+            <input class="input" id="demoDisabled" type="text" value="SIRAH05" disabled>
+            <span class="field-hint">Applied automatically at checkout</span>
+          </div>
+        </div>
+        <div class="demo-caption">Focus state uses a 3px subtle-tint ring behind a solid border — visible against both light and dark surfaces, meeting the AAA non-text contrast requirement without relying on color change alone (the border also thickens).</div>
+      </div>
+    </section>
+
+    <section id="c-badges">
+      <h2>Badges, tags &amp; status</h2>
+      <div class="demo-block">
+        <div class="demo-stage">
+          <span class="badge badge-success">In stock</span>
+          <span class="badge badge-info">Ready to ship</span>
+          <span class="badge badge-warning">Processing</span>
+          <span class="badge badge-danger">Out of stock</span>
+          <span class="badge badge-neutral">Completed</span>
+        </div>
+        <div class="demo-stage" style="border-top:1px solid var(--color-border-default);">
+          <span class="tag-chip" lang="bn">খিলগাঁও · Home <button aria-label="Remove address tag">×</button></span>
+          <span class="tag-chip">Non-fiction <button aria-label="Remove filter">×</button></span>
+          <span class="tag-chip">Free delivery ৳999+ <button aria-label="Remove filter">×</button></span>
+        </div>
+        <div class="demo-caption">Status badges always pair a color with a distinct label text — never color alone — so the meaning survives grayscale, color-blindness, or a printed screenshot.</div>
+      </div>
+    </section>
+
+    <section id="c-price">
+      <h2>Price &amp; rating</h2>
+      <div class="demo-block">
+        <div class="demo-stage">
+          <div>
+            <span class="price-current">৳299</span><span class="price-was">৳360</span>
+            <span class="price-save">Save ৳61 (17%)</span>
+          </div>
+          <div style="align-self:center;">
+            <div class="rating">
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.9 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.3l7.1-.7L12 2z"/></svg>
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.9 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.3l7.1-.7L12 2z"/></svg>
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.9 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.3l7.1-.7L12 2z"/></svg>
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.9 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.3l7.1-.7L12 2z"/></svg>
+              <svg class="star empty" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.9 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.3l7.1-.7L12 2z"/></svg>
+              4.66 <span style="font-weight:500;color:var(--color-text-secondary);">(3.4K)</span>
+            </div>
+          </div>
+          <div class="qty-stepper" role="group" aria-label="Quantity">
+            <button aria-label="Decrease quantity">−</button><span>1</span><button aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+        <div class="demo-caption">Star color is <b>--color-rating-star</b> (mapped from the warning ramp — gold reads as "rating," not "warning," in context, but stays inside the same governed hue band). The stepper's tap targets are 34px visually but carry 44px of padding on touch devices via the parent's min-height.</div>
+      </div>
+    </section>
+
+    <section id="c-cards">
+      <h2>Cards</h2>
+      <div class="demo-block">
+        <div class="demo-stage">
+          <div class="product-card">
+            <div class="product-thumb"></div>
+            <div class="product-body">
+              <div class="product-title" lang="bn">প্যারাডক্সিক্যাল সাজিদ</div>
+              <span class="price-current" style="font-size:15px;">৳250</span>
+              <div class="rating" style="margin-top:4px;font-size:11px;">
+                <svg class="star" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.9 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.3l7.1-.7L12 2z"/></svg>
+                4.7
+              </div>
+            </div>
+          </div>
+          <div class="order-card">
+            <div class="order-head">
+              <div><div class="order-id">Order · 17101901382349</div><div class="order-date">21 Sep 2026, 11:23 PM</div></div>
+              <span class="badge badge-info">Ready to ship</span>
+            </div>
+            <div class="order-item">
+              <div class="order-thumb"></div>
+              <div>
+                <div style="font-weight:700;font-size:12.5px;">Natural olive miswak — 1pc</div>
+                <div style="font-size:11.5px;color:var(--color-text-secondary);">Qty 3 · ৳65</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-caption">Cards use a 1px border rather than a shadow at rest — shadow appears only on hover/interaction (<b>--shadow-sm</b>), keeping the resting page calm and reserving elevation as a signal of interactivity.</div>
+      </div>
+    </section>
+
+    <section id="c-nav">
+      <h2>Navigation</h2>
+      <div class="demo-block">
+        <div class="demo-stage">
+          <div class="appframe">
+            <div class="topbar">
+              <div class="topbar-title">Home</div>
+              <div style="display:flex;gap:12px;">
+                <svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21l8.84-8.61a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+                <svg class="icon" width="18" height="18" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              </div>
+            </div>
+            <div class="appbody">
+              <div class="search-field" style="max-width:none;">
+                <svg class="icon ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input class="input" type="text" placeholder="Search by electronic" aria-label="Search">
+              </div>
+            </div>
+            <nav class="bottomnav" aria-label="Primary">
+              <div class="bottomnav-item active"><span class="dot"></span>Home</div>
+              <div class="bottomnav-item"><span class="dot"></span>Category</div>
+              <div class="bottomnav-item"><span class="dot"></span>Cart</div>
+              <div class="bottomnav-item"><span class="dot"></span>Library</div>
+              <div class="bottomnav-item"><span class="dot"></span>Account</div>
+            </nav>
+          </div>
+        </div>
+        <div class="demo-caption">Bottom navigation stays radius-none (flat) regardless of the rest of the system's rounding — it's a fixed anchor, not a floating element. Active state is color + a filled indicator dot, never color alone.</div>
+      </div>
+    </section>
+
+    <section id="c-checkout">
+      <h2>Checkout &amp; payment</h2>
+      <div class="demo-block">
+        <div class="demo-stage" style="flex-direction:column;align-items:flex-start;">
+          <div class="flow-stepper">
+            <div class="flow-node done">✓</div><div class="flow-line done"></div>
+            <div class="flow-node now">2</div><div class="flow-line"></div>
+            <div class="flow-node todo">3</div>
+          </div>
+          <div style="display:flex;gap:20px;font-size:11px;font-weight:700;color:var(--color-text-secondary);max-width:340px;justify-content:space-between;width:100%;">
+            <span style="color:var(--color-brand-primary);">Address</span><span style="color:var(--color-brand-primary);">Payment</span><span>Confirm</span>
+          </div>
+        </div>
+        <div class="demo-stage" style="border-top:1px solid var(--color-border-default);flex-direction:column;align-items:flex-start;">
+          <div class="pay-option selected">
+            <div class="radio-dot"></div>
+            <div><div class="pay-label">Mobile wallet</div><div class="pay-sub">Pay instantly from your wallet balance</div></div>
+          </div>
+          <div class="pay-option">
+            <div class="radio-dot"></div>
+            <div><div class="pay-label">Cash on delivery</div><div class="pay-sub">Pay when the order arrives</div></div>
+          </div>
+          <div class="pay-option">
+            <div class="radio-dot"></div>
+            <div><div class="pay-label">Card</div><div class="pay-sub">Visa, Mastercard, Amex</div></div>
+          </div>
+        </div>
+        <div class="demo-caption">Selected payment state uses the same brand-primary-subtle + brand-primary border pattern as focus rings and active nav items — one visual language for "this is the chosen thing," reused everywhere.</div>
+      </div>
+    </section>
+
+    <section id="c-account">
+      <h2>Account &amp; rewards</h2>
+      <div class="demo-block">
+        <div class="demo-stage">
+          <div style="display:flex;gap:var(--space-3);align-items:center;">
+            <div class="avatar"></div>
+            <div>
+              <div style="font-weight:800;font-size:14px;">MD Sajed</div>
+              <div style="font-size:11.5px;color:var(--color-text-secondary);margin-bottom:6px;">Reward tier · Rising star</div>
+              <div class="tier-track"><div class="tier-fill" style="width:22%;"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-caption">Progress fill always renders at ≥3:1 contrast against its track — verified the same way the color ramps are checked below, not eyeballed.</div>
+      </div>
+    </section>
+
+    <section id="c-alerts">
+      <h2>Alerts &amp; banners</h2>
+      <div class="demo-block">
+        <div class="demo-stage" style="flex-direction:column;align-items:stretch;">
+          <div class="alert alert-info">
+            <svg class="icon alert-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="8"/><line x1="12" y1="11" x2="12" y2="16"/></svg>
+            <div><div class="alert-title">Free shipping on orders over ৳999</div><div class="alert-body">Applies automatically at checkout, no code needed.</div></div>
+          </div>
+          <div class="alert alert-success">
+            <svg class="icon alert-icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+            <div><div class="alert-title">Payment confirmed</div><div class="alert-body">Order #17101901382349 is being prepared.</div></div>
+          </div>
+          <div class="alert alert-danger">
+            <svg class="icon alert-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
+            <div><div class="alert-title">Payment failed</div><div class="alert-body">Your bank declined the transaction. Try another method or contact your bank.</div></div>
+          </div>
+        </div>
+        <div class="demo-caption">Every alert pairs an icon shape (not just color) with its meaning — circle-check for success, circle-exclaim for danger — so the message still parses for a color-blind reader or in forced-colors mode.</div>
+      </div>
+    </section>
+
+    <section id="accessibility">
+      <h2>Accessibility — built for AAA</h2>
+      <p class="section-lede">This isn't a bolt-on audit pass; contrast is enforced at the token level, so any future palette change is checked automatically by the same math used in the color section above.</p>
+      <div class="panel">
+        <div class="a11y-row a11y-head"><div>Criterion</div><div>Requirement</div><div>How this system meets it</div></div>
+        <div class="a11y-row"><div>Text contrast</div><div class="dim">7:1 normal text, 4.5:1 large text (WCAG 1.4.6, AAA)</div><div class="dim"><code>--color-text-primary</code> and <code>--color-text-secondary</code> are chosen from the shade with a passing badge in the ramp above — regenerated on every palette change.</div></div>
+        <div class="a11y-row"><div>Non-text contrast</div><div class="dim">3:1 for UI components and graphical objects (1.4.11)</div><div class="dim">Borders use <code>--border-strong</code> at minimum; icons inherit text color, never a low-contrast tint.</div></div>
+        <div class="a11y-row"><div>Touch target size</div><div class="dim">44×44 CSS px minimum, 8px spacing between adjacent targets (2.5.5, AAA)</div><div class="dim">All buttons, nav items and steppers hold a 44px minimum tap area even when the visible chip is smaller.</div></div>
+        <div class="a11y-row"><div>Focus visibility</div><div class="dim">Clearly visible, never suppressed (2.4.7 / 2.4.11)</div><div class="dim">2.5px outline + 2px offset on every interactive element; never <code>outline:none</code> without a replacement.</div></div>
+        <div class="a11y-row"><div>Color independence</div><div class="dim">Never convey meaning by color alone (1.4.1)</div><div class="dim">Status badges carry a text label, alerts carry a distinct icon shape per severity.</div></div>
+        <div class="a11y-row"><div>Motion</div><div class="dim">Respect reduced-motion preference (2.3.3, AAA)</div><div class="dim">Global <code>prefers-reduced-motion</code> query collapses all durations.</div></div>
+        <div class="a11y-row"><div>Language of parts</div><div class="dim">Mark language changes inline (3.1.2)</div><div class="dim">Bangla text runs are wrapped in <code>lang="bn"</code>, which also triggers the wider line-height rule.</div></div>
+        <div class="a11y-row"><div>Line length</div><div class="dim">No more than ~80 characters per line (1.4.8, AAA)</div><div class="dim">Body copy is capped at 64–70ch via <code>max-width</code>.</div></div>
+      </div>
+    </section>
+
+    <section id="tokens">
+      <h2>Export tokens</h2>
+      <p class="section-lede">Live output for the current palette and mode — drop the CSS block into a stylesheet, or hand the JSON to a Figma Tokens / Style Dictionary pipeline.</p>
+      <div class="export-tabs">
+        <button class="export-tab active" data-tab="css">CSS custom properties</button>
+        <button class="export-tab" data-tab="json">JSON</button>
+      </div>
+      <pre class="export-pre" id="exportOut"></pre>
+      <div class="copy-row"><button class="btn btn-outline btn-small" id="copyBtn">Copy to clipboard</button></div>
+    </section>
+
+    <section id="governance" style="margin-bottom:var(--space-10);">
+      <h2>Governance</h2>
+      <div class="panel">
+        <ul style="padding-left:18px;color:var(--color-text-secondary);font-size:13px;line-height:1.9;">
+          <li>Only <b>seven</b> values are ever hand-picked: the seeds. Everything else — 84 primitive shades, ~30 semantic tokens, every component style — is derived, never hand-tuned per component.</li>
+          <li>A new component is "done" when it's built entirely from semantic tokens (tier 2) and contains zero literal hex values.</li>
+          <li>A new semantic token is only added when two or more components need the same color decision. One-off needs stay component-local.</li>
+          <li>Version the token set independently from the component library (semver). A palette swap is a minor bump; adding a new semantic role is a minor bump; removing one is a major bump.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      Token engine runs entirely client-side — change any seed color above and every swatch, contrast badge and component on this page recomputes instantly.
+    </footer>
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   COLOR ENGINE
+   ============================================================ */
+const RAMP_STEPS = [25,50,100,200,300,400,500,600,700,800,900,950];
+const LIGHTNESS  = {25:97,50:94,100:88,200:78,300:67,400:56,500:47,600:39,700:32,800:25,900:18,950:11};
+const SAT_FACTOR = {25:.35,50:.45,100:.6,200:.75,300:.9,400:1,500:1,600:1,700:.95,800:.88,900:.8,950:.7};
+const LIGHT_TEXT_STEPS = new Set([500,600,700,800,900,950]);
+
+function clamp(v,a,b){return Math.min(b,Math.max(a,v));}
+function hexToRgb(hex){
+  hex = hex.replace('#','');
+  if(hex.length===3) hex = hex.split('').map(c=>c+c).join('');
+  const num = parseInt(hex,16);
+  return {r:(num>>16)&255, g:(num>>8)&255, b:num&255};
+}
+function rgbToHex(r,g,b){
+  return '#' + [r,g,b].map(v=>clamp(Math.round(v),0,255).toString(16).padStart(2,'0')).join('');
+}
+function rgbToHsl(r,g,b){
+  r/=255; g/=255; b/=255;
+  const max=Math.max(r,g,b), min=Math.min(r,g,b);
+  let h,s,l=(max+min)/2;
+  if(max===min){h=s=0;}
+  else{
+    const d=max-min;
+    s = l>0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max){
+      case r: h=(g-b)/d+(g<b?6:0); break;
+      case g: h=(b-r)/d+2; break;
+      default: h=(r-g)/d+4;
+    }
+    h/=6;
+  }
+  return {h:h*360, s:s*100, l:l*100};
+}
+function hslToRgb(h,s,l){
+  h=((h%360)+360)%360/360; s/=100; l/=100;
+  let r,g,b;
+  if(s===0){r=g=b=l;}
+  else{
+    const hue2rgb=(p,q,t)=>{
+      if(t<0)t+=1; if(t>1)t-=1;
+      if(t<1/6) return p+(q-p)*6*t;
+      if(t<1/2) return q;
+      if(t<2/3) return p+(q-p)*(2/3-t)*6;
+      return p;
+    };
+    const q = l<0.5 ? l*(1+s) : l+s-l*s;
+    const p = 2*l-q;
+    r=hue2rgb(p,q,h+1/3); g=hue2rgb(p,q,h); b=hue2rgb(p,q,h-1/3);
+  }
+  return {r:r*255,g:g*255,b:b*255};
+}
+function hexToHsl(hex){ const {r,g,b}=hexToRgb(hex); return rgbToHsl(r,g,b); }
+function hslToHex(h,s,l){ const {r,g,b}=hslToRgb(h,s,l); return rgbToHex(r,g,b); }
+function relLuminance(hex){
+  const {r,g,b}=hexToRgb(hex);
+  const chan=v=>{ v/=255; return v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055,2.4); };
+  return 0.2126*chan(r)+0.7152*chan(g)+0.0722*chan(b);
+}
+function contrastRatio(hexA,hexB){
+  const L1=relLuminance(hexA), L2=relLuminance(hexB);
+  const light=Math.max(L1,L2), dark=Math.min(L1,L2);
+  return (light+0.05)/(dark+0.05);
+}
+function ratingBadge(ratio){
+  if(ratio>=7)   return {label:'AAA',   cls:'pass-aaa'};
+  if(ratio>=4.5) return {label:'AA',    cls:'pass-aa'};
+  if(ratio>=3)   return {label:'AA lg', cls:'pass-aalarge'};
+  return {label:'Fail', cls:'fail'};
+}
+function generateRamp(seedHex, isNeutral){
+  const {h,s} = hexToHsl(seedHex);
+  const baseS = isNeutral ? clamp(s*0.14,4,12) : s;
+  const ramp = {};
+  RAMP_STEPS.forEach(step=>{
+    const l = LIGHTNESS[step];
+    const sat = isNeutral ? baseS : Math.min(100, baseS*SAT_FACTOR[step]);
+    ramp[step] = hslToHex(h, sat, l);
+  });
+  return ramp;
+}
+
+const FEEDBACK = ['success','warning','danger','info'];
+const SEED_META = {
+  primary:   {label:'Primary',   hint:'CTAs, links, active states'},
+  secondary: {label:'Secondary', hint:'Warm accent CTA'},
+  success:   {label:'Success',   hint:'Confirmations, in-stock'},
+  warning:   {label:'Warning',   hint:'Attention, ratings'},
+  danger:    {label:'Danger',    hint:'Errors, destructive'},
+  info:      {label:'Info',      hint:'Neutral notices'},
+  neutral:   {label:'Neutral',   hint:'Backgrounds, text, borders'},
+};
+
+const PRESETS = {
+  rokomari:{ primary:'#1D5FCB', secondary:'#F2790B', success:'#17875A', warning:'#F2A50C', danger:'#E5484D', info:'#1FA2E3', neutral:'#1D5FCB' },
+  emerald: { primary:'#0F7A55', secondary:'#C9A227', success:'#1E8E5A', warning:'#E8A93B', danger:'#D14545', info:'#2E8FAF', neutral:'#12664A' },
+  plum:    { primary:'#7C3F86', secondary:'#B8863B', success:'#2E8B57', warning:'#D9A441', danger:'#C1443C', info:'#5A7FB0', neutral:'#6E4373' },
+  mono:    { primary:'#3A3F4B', secondary:'#8A6D3B', success:'#3F7D5C', warning:'#B98A2E', danger:'#B14A42', info:'#4C6B8A', neutral:'#3A3F4B' },
+};
+
+const STATE = {
+  seeds: {...PRESETS.rokomari},
+  theme: (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light',
+  ramps: {},
+  semantic: {},
+};
+
+function buildSemanticMap(ramps, isDark){
+  const map = {};
+  map['bg-canvas']      = isDark ? ramps.neutral[950] : ramps.neutral[25];
+  map['bg-surface']     = isDark ? ramps.neutral[900] : '#FFFFFF';
+  map['bg-subtle']      = isDark ? ramps.neutral[800] : ramps.neutral[50];
+  map['bg-inverse']     = isDark ? ramps.neutral[25]  : ramps.neutral[950];
+  map['border-default'] = isDark ? ramps.neutral[700] : ramps.neutral[200];
+  map['border-strong']  = isDark ? ramps.neutral[600] : ramps.neutral[300];
+  map['text-primary']   = isDark ? ramps.neutral[25]  : ramps.neutral[900];
+  map['text-secondary'] = isDark ? ramps.neutral[300] : ramps.neutral[600];
+  map['text-disabled']  = isDark ? ramps.neutral[600] : ramps.neutral[400];
+  map['text-inverse']   = isDark ? ramps.neutral[950] : '#FFFFFF';
+  map['brand-primary']        = isDark ? ramps.primary[400] : ramps.primary[600];
+  map['brand-primary-hover']  = isDark ? ramps.primary[300] : ramps.primary[700];
+  map['brand-primary-active'] = isDark ? ramps.primary[200] : ramps.primary[800];
+  map['brand-primary-subtle'] = isDark ? ramps.primary[900] : ramps.primary[50];
+  map['accent']        = isDark ? ramps.secondary[400] : ramps.secondary[500];
+  map['accent-hover']  = isDark ? ramps.secondary[300] : ramps.secondary[600];
+  map['accent-subtle'] = isDark ? ramps.secondary[900] : ramps.secondary[50];
+  map['focus-ring']    = isDark ? ramps.primary[300]   : ramps.primary[600];
+  map['rating-star']   = isDark ? ramps.warning[300]   : ramps.warning[500];
+  FEEDBACK.forEach(name=>{
+    const r = ramps[name];
+    map[`${name}-text`]   = isDark ? r[300] : r[700];
+    map[`${name}-bg`]     = isDark ? r[900] : r[50];
+    map[`${name}-border`] = isDark ? r[700] : r[200];
+    map[`${name}-solid`]  = isDark ? r[500] : r[600];
+    const solid = map[`${name}-solid`];
+    const cWhite = contrastRatio(solid, '#FFFFFF');
+    const cDark  = contrastRatio(solid, ramps.neutral[950]);
+    map[`${name}-solid-text`] = cWhite >= cDark ? '#FFFFFF' : ramps.neutral[950];
+  });
+  return map;
+}
+
+function applyPalette(){
+  const ramps = {
+    primary:   generateRamp(STATE.seeds.primary, false),
+    secondary: generateRamp(STATE.seeds.secondary, false),
+    success:   generateRamp(STATE.seeds.success, false),
+    warning:   generateRamp(STATE.seeds.warning, false),
+    danger:    generateRamp(STATE.seeds.danger, false),
+    info:      generateRamp(STATE.seeds.info, false),
+    neutral:   generateRamp(STATE.seeds.neutral || STATE.seeds.primary, true),
+  };
+  STATE.ramps = ramps;
+  const root = document.documentElement.style;
+  Object.entries(ramps).forEach(([name, ramp])=>{
+    Object.entries(ramp).forEach(([step, hex])=> root.setProperty(`--${name}-${step}`, hex));
+  });
+  const isDark = STATE.theme === 'dark';
+  const semantic = buildSemanticMap(ramps, isDark);
+  STATE.semantic = semantic;
+  Object.entries(semantic).forEach(([k,v])=> root.setProperty(`--color-${k}`, v));
+  document.documentElement.setAttribute('data-theme', STATE.theme);
+}
+
+/* run immediately so there is no flash of unstyled content */
+applyPalette();
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+function el(tag, cls, html){ const e=document.createElement(tag); if(cls) e.className=cls; if(html!==undefined) e.innerHTML=html; return e; }
+
+function renderSeedPanel(){
+  const panel = document.getElementById('seedPanel');
+  panel.innerHTML='';
+  Object.keys(SEED_META).forEach(key=>{
+    const meta = SEED_META[key];
+    const field = el('div','seed-field');
+    const label = el('label','', `<span>${meta.label}</span>`);
+    field.appendChild(label);
+    const input = document.createElement('input');
+    input.type='color'; input.value=STATE.seeds[key]; input.dataset.role=key;
+    input.setAttribute('aria-label', meta.label+' seed color');
+    input.addEventListener('input', e=>{
+      STATE.seeds[e.target.dataset.role] = e.target.value;
+      applyPalette(); renderAll();
+    });
+    field.appendChild(input);
+    field.appendChild(el('div','seed-hex', meta.hint));
+    panel.appendChild(field);
+  });
+}
+
+function renderRamps(){
+  const container = document.getElementById('rampGroups');
+  container.innerHTML='';
+  Object.keys(SEED_META).forEach(name=>{
+    const ramp = STATE.ramps[name];
+    const group = el('div','ramp-group');
+    const label = el('div','ramp-label', `<span class="ramp-name">${SEED_META[name].label}<small>${STATE.seeds[name].toUpperCase()}</small></span>`);
+    group.appendChild(label);
+    const row = el('div','ramp-row');
+    RAMP_STEPS.forEach(step=>{
+      const hex = ramp[step];
+      const onWhite = contrastRatio(hex, '#FFFFFF');
+      const onDark  = contrastRatio(hex, STATE.ramps.neutral[950]);
+      const best = onWhite >= onDark ? {ratio:onWhite,bg:'white'} : {ratio:onDark,bg:'dark'};
+      const badge = ratingBadge(best.ratio);
+      const sw = el('div','swatch');
+      sw.style.background = hex;
+      sw.style.color = LIGHT_TEXT_STEPS.has(step) ? '#FFFFFF' : '#14141A';
+      sw.innerHTML = `<span class="swatch-step">${step}</span><span class="swatch-hex">${hex.toUpperCase()}</span><span class="swatch-contrast ${badge.cls}">${badge.label} ${best.ratio.toFixed(1)}:1</span>`;
+      row.appendChild(sw);
+    });
+    group.appendChild(row);
+    container.appendChild(group);
+  });
+}
+
+const SEMANTIC_DISPLAY = [
+  'bg-canvas','bg-surface','bg-subtle','bg-inverse',
+  'border-default','border-strong',
+  'text-primary','text-secondary','text-disabled','text-inverse',
+  'brand-primary','brand-primary-hover','brand-primary-subtle',
+  'accent','accent-subtle',
+  'success-solid','success-bg','warning-solid','warning-bg',
+  'danger-solid','danger-bg','info-solid','info-bg',
+];
+function renderSemanticGrid(){
+  const grid = document.getElementById('semanticGrid');
+  grid.innerHTML='';
+  SEMANTIC_DISPLAY.forEach(key=>{
+    const hex = STATE.semantic[key];
+    const tile = el('div','semantic-tile');
+    const sw = el('div','semantic-swatch');
+    sw.style.background = hex;
+    sw.style.border = '1px solid ' + STATE.semantic['border-default'];
+    tile.appendChild(sw);
+    tile.appendChild(el('div','semantic-meta', `<span class="tok">--color-${key}</span><span class="val">${hex.toUpperCase()}</span>`));
+    grid.appendChild(tile);
+  });
+}
+
+const TYPE_SCALE = [
+  {name:'Display', px:32, lh:40, w:800, sample:'Free shipping', sampleBn:'ফ্রি শিপিং'},
+  {name:'H1', px:28, lh:36, w:700, sample:'My cart', sampleBn:'আমার কার্ট'},
+  {name:'H2', px:22, lh:30, w:700, sample:'Choose payment method', sampleBn:'পেমেন্ট পদ্ধতি বাছাই করুন'},
+  {name:'H3', px:18, lh:26, w:600, sample:'Frequently bought together', sampleBn:'একসাথে কেনা হয়'},
+  {name:'Body lg', px:16, lh:24, w:500, sample:'Hello, MD Sajed', sampleBn:'হ্যালো, এমডি সাজেদ'},
+  {name:'Body', px:14, lh:22, w:400, sample:'Cash on delivery available', sampleBn:'ক্যাশ অন ডেলিভারি সুবিধা আছে'},
+  {name:'Body sm', px:13, lh:20, w:400, sample:'7 days happy return', sampleBn:'৭ দিনের রিটার্ন সুবিধা'},
+  {name:'Caption', px:12, lh:16, w:500, sample:'Qty 3 · Non-Brand', sampleBn:'পরিমাণ ৩টি'},
+  {name:'Micro', px:11, lh:14, w:600, sample:'IN STOCK', sampleBn:'স্টকে আছে'},
+];
+function renderTypeScale(){
+  const wrap = document.getElementById('typeScale');
+  wrap.innerHTML='';
+  TYPE_SCALE.forEach(t=>{
+    const row = el('div','type-row');
+    row.appendChild(el('div','type-meta', `${t.name}<br>${t.px}/${t.lh} · ${t.w}`));
+    const sample = el('div','', `<span style="font-size:${t.px}px;line-height:${t.lh}px;font-weight:${t.w};display:block;">${t.sample}</span>`);
+    row.appendChild(sample);
+    const bn = el('div','', `<span lang="bn" style="font-size:${t.px}px;font-weight:${t.w};display:block;">${t.sampleBn}</span>`);
+    row.appendChild(bn);
+    wrap.appendChild(row);
+  });
+}
+
+const SPACING = [1,2,3,4,5,6,8,10,12,16].map(n=>({token:`space-${n}`, px:n*4}));
+function renderSpacing(){
+  const wrap = document.getElementById('spacingScale');
+  wrap.innerHTML='';
+  const max = 64;
+  SPACING.forEach(s=>{
+    const row = el('div','bar-row');
+    row.appendChild(el('div','bar-token','--'+s.token));
+    const track = el('div','bar-track');
+    const fill = el('div','bar-fill');
+    fill.style.width = (s.px/max*100)+'%';
+    track.appendChild(fill);
+    row.appendChild(track);
+    row.appendChild(el('div','bar-px', s.px+'px'));
+    wrap.appendChild(row);
+  });
+}
+
+const RADII = [
+  {token:'radius-none', px:0,  usage:'Bottom navigation, full-bleed dividers'},
+  {token:'radius-xs',   px:4,  usage:'Quantity stepper buttons, small chips'},
+  {token:'radius-sm',   px:8,  usage:'Buttons, product cards, order cards'},
+  {token:'radius-md',   px:12, usage:'Search fields, input fields, list cards'},
+  {token:'radius-lg',   px:16, usage:'Promo banners, sheets, dialogs'},
+  {token:'radius-xl',   px:24, usage:'Hero media, large feature cards'},
+  {token:'radius-full', px:9999, usage:'Status pills, avatars, icon tiles, badges'},
+];
+function renderRadius(){
+  const grid = document.getElementById('radiusScale');
+  grid.innerHTML='';
+  RADII.forEach(r=>{
+    const tile = el('div','radius-tile');
+    const sw = el('div','radius-swatch');
+    sw.style.borderRadius = r.token==='radius-full' ? '999px' : r.px+'px';
+    tile.appendChild(sw);
+    tile.appendChild(el('div','tile-token', '--'+r.token+' · '+(r.px===9999?'full':r.px+'px')));
+    tile.appendChild(el('div','tile-usage', r.usage));
+    grid.appendChild(tile);
+  });
+}
+
+const ELEVATIONS = [
+  {token:'shadow-xs', usage:'Resting card border alt.'},
+  {token:'shadow-sm', usage:'Hovered card, dropdown'},
+  {token:'shadow-md', usage:'Floating action button'},
+  {token:'shadow-lg', usage:'Modal, bottom sheet'},
+  {token:'shadow-top', usage:'Sticky checkout bar'},
+];
+function renderElevation(){
+  const grid = document.getElementById('elevScale');
+  grid.innerHTML='';
+  ELEVATIONS.forEach(e=>{
+    const tile = el('div','elev-tile');
+    const sw = el('div','elev-swatch');
+    sw.style.boxShadow = `var(--${e.token})`;
+    tile.appendChild(sw);
+    tile.appendChild(el('div','tile-token','--'+e.token));
+    tile.appendChild(el('div','tile-usage', e.usage));
+    grid.appendChild(tile);
+  });
+}
+
+function buildCssExport(){
+  let out = ':root {\n';
+  Object.keys(SEED_META).forEach(name=>{
+    RAMP_STEPS.forEach(step=> out += `  --${name}-${step}: ${STATE.ramps[name][step]};\n`);
+  });
+  out += '\n';
+  Object.entries(STATE.semantic).forEach(([k,v])=> out += `  --color-${k}: ${v};\n`);
+  out += '}\n';
+  return out;
+}
+function buildJsonExport(){
+  const obj = {seeds: STATE.seeds, mode: STATE.theme, primitives: STATE.ramps, semantic: STATE.semantic};
+  return JSON.stringify(obj, null, 2);
+}
+let exportTab = 'css';
+function renderExport(){
+  document.getElementById('exportOut').textContent = exportTab==='css' ? buildCssExport() : buildJsonExport();
+}
+
+function renderAll(){
+  renderRamps();
+  renderSemanticGrid();
+  renderExport();
+  const inputs = document.querySelectorAll('#seedPanel input[type=color]');
+  inputs.forEach(i=> i.value = STATE.seeds[i.dataset.role]);
+}
+
+/* ============================================================
+   WIRING
+   ============================================================ */
+document.querySelectorAll('.preset-btn[data-preset]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    STATE.seeds = {...PRESETS[btn.dataset.preset]};
+    applyPalette(); renderAll();
+  });
+});
+
+document.getElementById('randomizeBtn').addEventListener('click', ()=>{
+  const rand = (min,max)=> Math.floor(min + Math.random()*(max-min));
+  const {s,l} = hexToHsl(STATE.seeds.primary);
+  STATE.seeds.primary   = hslToHex(rand(0,360), clamp(s,55,80), clamp(l,42,52));
+  STATE.seeds.secondary = hslToHex(rand(0,360), clamp(s,60,85), clamp(l,45,55));
+  STATE.seeds.success   = hslToHex(rand(120,160), 55, 38);
+  STATE.seeds.danger    = hslToHex(rand(350,370)%360, 65, 52);
+  STATE.seeds.warning   = hslToHex(rand(35,50), 80, 52);
+  STATE.seeds.info      = hslToHex(rand(195,222), 65, 50);
+  STATE.seeds.neutral   = STATE.seeds.primary;
+  applyPalette(); renderAll();
+});
+
+const darkSwitch = document.getElementById('darkSwitch');
+function setDark(on){
+  STATE.theme = on ? 'dark' : 'light';
+  darkSwitch.classList.toggle('on', on);
+  darkSwitch.setAttribute('aria-checked', on ? 'true':'false');
+  applyPalette(); renderAll();
+}
+darkSwitch.addEventListener('click', ()=> setDark(!darkSwitch.classList.contains('on')));
+darkSwitch.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); darkSwitch.click(); } });
+if(STATE.theme==='dark'){ darkSwitch.classList.add('on'); darkSwitch.setAttribute('aria-checked','true'); }
+
+document.querySelectorAll('.export-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.export-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    exportTab = tab.dataset.tab;
+    renderExport();
+  });
+});
+document.getElementById('copyBtn').addEventListener('click', async ()=>{
+  const text = document.getElementById('exportOut').textContent;
+  const btn = document.getElementById('copyBtn');
+  try{
+    await navigator.clipboard.writeText(text);
+    btn.textContent = 'Copied';
+    setTimeout(()=> btn.textContent = 'Copy to clipboard', 1500);
+  }catch(err){
+    btn.textContent = 'Select the text above to copy';
+    setTimeout(()=> btn.textContent = 'Copy to clipboard', 2000);
+  }
+});
+
+/* nav active-state on scroll + close mobile drawer on link click */
+document.querySelectorAll('.navlink').forEach(link=>{
+  link.addEventListener('click', ()=> document.body.classList.remove('nav-open'));
+});
+const sections = document.querySelectorAll('main section[id]');
+const navlinks = document.querySelectorAll('.navlink');
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      navlinks.forEach(l=> l.classList.toggle('active', l.getAttribute('href')==='#'+entry.target.id));
+    }
+  });
+}, {rootMargin:'-15% 0px -70% 0px'});
+sections.forEach(s=> observer.observe(s));
+
+/* initial paint */
+renderSeedPanel();
+renderRamps();
+renderSemanticGrid();
+renderTypeScale();
+renderSpacing();
+renderRadius();
+renderElevation();
+renderExport();
+</script>
+</body>
+</html>

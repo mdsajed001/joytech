@@ -1,0 +1,421 @@
+export const CATEGORIES = [
+	{
+		id: "cases",
+		slug: "cases-covers",
+		name: "Cases & Covers",
+		nameBn: "কেস ও ব্যাককভার",
+		iconName: "Shield01Icon",
+		itemCount: 142
+	},
+	{
+		id: "screen-glass",
+		slug: "screen-protectors",
+		name: "Screen Protectors",
+		nameBn: "স্ক্রিন প্রটেক্টর ও গ্লাস",
+		iconName: "SmartPhone01Icon",
+		itemCount: 86
+	},
+	{
+		id: "chargers",
+		slug: "chargers-adapters",
+		name: "Fast Chargers",
+		nameBn: "ফাস্ট চার্জার ও অ্যাডাপ্টার",
+		iconName: "FlashIcon",
+		itemCount: 64
+	},
+	{
+		id: "cables",
+		slug: "cables",
+		name: "Cables & Docks",
+		nameBn: "কেবিল ও কানেক্টর",
+		iconName: "UsbIcon",
+		itemCount: 53
+	},
+	{
+		id: "magsafe",
+		slug: "magsafe-wireless",
+		name: "MagSafe Accessories",
+		nameBn: "ম্যাগসেফ ও ওয়্যারলেস",
+		iconName: "BatteryCharging01Icon",
+		itemCount: 39
+	},
+	{
+		id: "audio",
+		slug: "audio-earphones",
+		name: "Audio & Earphones",
+		nameBn: "হেডফোন ও ইয়ারবাডস",
+		iconName: "HeadphonesIcon",
+		itemCount: 48
+	}
+];
+export const PHONE_BRANDS = [
+	{
+		id: "apple",
+		name: "Apple",
+		slug: "apple",
+		logo: "Apple"
+	},
+	{
+		id: "samsung",
+		name: "Samsung",
+		slug: "samsung",
+		logo: "Samsung"
+	},
+	{
+		id: "google",
+		name: "Google Pixel",
+		slug: "google-pixel",
+		logo: "Google"
+	},
+	{
+		id: "xiaomi",
+		name: "Xiaomi",
+		slug: "xiaomi",
+		logo: "Xiaomi"
+	}
+];
+export const PHONE_MODELS = [
+	(
+	// Apple
+	{
+		id: "ip-16-pro-max",
+		brandId: "apple",
+		name: "iPhone 16 Pro Max",
+		slug: "iphone-16-pro-max"
+	}),
+	{
+		id: "ip-16-pro",
+		brandId: "apple",
+		name: "iPhone 16 Pro",
+		slug: "iphone-16-pro"
+	},
+	{
+		id: "ip-15-pro-max",
+		brandId: "apple",
+		name: "iPhone 15 Pro Max",
+		slug: "iphone-15-pro-max"
+	},
+	{
+		id: "ip-15-pro",
+		brandId: "apple",
+		name: "iPhone 15 Pro",
+		slug: "iphone-15-pro"
+	},
+	{
+		id: "ip-15",
+		brandId: "apple",
+		name: "iPhone 15",
+		slug: "iphone-15"
+	},
+	{
+		id: "ip-14-pro-max",
+		brandId: "apple",
+		name: "iPhone 14 Pro Max",
+		slug: "iphone-14-pro-max"
+	},
+	(
+	// Samsung
+	{
+		id: "sam-s24-ultra",
+		brandId: "samsung",
+		name: "Galaxy S24 Ultra",
+		slug: "galaxy-s24-ultra"
+	}),
+	{
+		id: "sam-s24-plus",
+		brandId: "samsung",
+		name: "Galaxy S24+",
+		slug: "galaxy-s24-plus"
+	},
+	{
+		id: "sam-s23-ultra",
+		brandId: "samsung",
+		name: "Galaxy S23 Ultra",
+		slug: "galaxy-s23-ultra"
+	},
+	{
+		id: "sam-a55",
+		brandId: "samsung",
+		name: "Galaxy A55 5G",
+		slug: "galaxy-a55-5g"
+	},
+	(
+	// Google
+	{
+		id: "px-9-pro-xl",
+		brandId: "google",
+		name: "Pixel 9 Pro XL",
+		slug: "pixel-9-pro-xl"
+	}),
+	{
+		id: "px-9-pro",
+		brandId: "google",
+		name: "Pixel 9 Pro",
+		slug: "pixel-9-pro"
+	},
+	{
+		id: "px-8-pro",
+		brandId: "google",
+		name: "Pixel 8 Pro",
+		slug: "pixel-8-pro"
+	},
+	(
+	// Xiaomi
+	{
+		id: "xi-14-ultra",
+		brandId: "xiaomi",
+		name: "Xiaomi 14 Ultra",
+		slug: "xiaomi-14-ultra"
+	}),
+	{
+		id: "xi-redmi-note-13-pro",
+		brandId: "xiaomi",
+		name: "Redmi Note 13 Pro+",
+		slug: "redmi-note-13-pro-plus"
+	}
+];
+export const PRODUCTS = [
+	{
+		id: "spigen-ultra-16pm",
+		slug: "spigen-ultra-hybrid-magsafe-iphone-16-pro-max",
+		name: "Spigen Ultra Hybrid MagSafe Frosted Case",
+		nameBn: "স্পাইজিন আল্ট্রা হাইব্রিড ম্যাগসেফ ফ্রস্টেড কেস",
+		brand: "Spigen",
+		categoryId: "cases",
+		compatibleModels: ["iphone-16-pro-max"],
+		price: 2450,
+		originalPrice: 2850,
+		discountPercent: 14,
+		rating: 4.9,
+		reviewCount: 128,
+		inStock: true,
+		stockCount: 18,
+		image: "https://images.unsplash.com/photo-1603313011101-320f26a4f6f6?w=600&auto=format&fit=crop&q=80",
+		isBestSeller: true,
+		isFlashSale: true,
+		features: [
+			"Air Cushion Tech",
+			"Strong MagSafe Magnet",
+			"Anti-Yellowing TPU"
+		]
+	},
+	{
+		id: "anker-nano3-30w",
+		slug: "anker-511-nano-3-30w-gan-fast-charger",
+		name: "Anker 511 Nano 3 30W GaN Fast Charger",
+		nameBn: "অ্যাঙ্কর ৫১১ ন্যানো ৩ ৩০ওয়াট ফাস্ট চার্জার",
+		brand: "Anker",
+		categoryId: "chargers",
+		compatibleModels: [
+			"iphone-16-pro-max",
+			"iphone-16-pro",
+			"iphone-15-pro-max",
+			"iphone-15-pro",
+			"galaxy-s24-ultra",
+			"pixel-9-pro"
+		],
+		price: 1950,
+		originalPrice: 2400,
+		discountPercent: 19,
+		rating: 4.8,
+		reviewCount: 342,
+		inStock: true,
+		stockCount: 4,
+		image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&auto=format&fit=crop&q=80",
+		isBestSeller: true,
+		isFlashSale: true,
+		features: [
+			"GaN II Technology",
+			"Ultra-Compact Size",
+			"PowerIQ 3.0 Fast Charge"
+		]
+	},
+	{
+		id: "esr-armorite-16pm",
+		slug: "esr-armorite-9h-screen-protector-iphone-16-pro-max",
+		name: "ESR Armorite 9H Ultra-Tough Tempered Glass (2-Pack)",
+		nameBn: "ইএসআর আর্মারাইট ৯এইচ টেম্পার্ড গ্লাস (২ প্যাক)",
+		brand: "ESR",
+		categoryId: "screen-glass",
+		compatibleModels: ["iphone-16-pro-max"],
+		price: 1650,
+		originalPrice: 1950,
+		discountPercent: 15,
+		rating: 4.7,
+		reviewCount: 89,
+		inStock: true,
+		stockCount: 22,
+		image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600&auto=format&fit=crop&q=80",
+		isBestSeller: true,
+		features: [
+			"110 lb Impact Resistance",
+			"Auto-Alignment Tray",
+			"Ultra HD Clarity"
+		]
+	},
+	{
+		id: "nillkin-camshield-s24u",
+		slug: "nillkin-camshield-pro-magnetic-galaxy-s24-ultra",
+		name: "Nillkin CamShield Pro Armor Magnetic Case",
+		nameBn: "নিলকিন ক্যামশিল্ড প্রো ম্যাগনেটিক কভার",
+		brand: "Nillkin",
+		categoryId: "cases",
+		compatibleModels: ["galaxy-s24-ultra"],
+		price: 1850,
+		originalPrice: 2200,
+		discountPercent: 16,
+		rating: 4.8,
+		reviewCount: 76,
+		inStock: true,
+		stockCount: 12,
+		image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80",
+		isBestSeller: false,
+		isNewArrival: true,
+		isFlashSale: true,
+		features: [
+			"Patented Camera Lens Slider",
+			"Impact Resistant Bumper",
+			"Wireless Charge Friendly"
+		]
+	},
+	{
+		id: "baseus-blade-powerbank",
+		slug: "baseus-blade-100w-ultra-slim-laptop-power-bank",
+		name: "Baseus Blade 100W Ultra-Slim Digital Power Bank (20000mAh)",
+		nameBn: "বেসাস ব্লেড ১০০ওয়াট ডিজিটাল ডিসপ্লে পাওয়ার ব্যাংক",
+		brand: "Baseus",
+		categoryId: "chargers",
+		compatibleModels: [
+			"iphone-16-pro-max",
+			"galaxy-s24-ultra",
+			"pixel-9-pro-xl"
+		],
+		price: 5400,
+		originalPrice: 6200,
+		discountPercent: 13,
+		rating: 4.9,
+		reviewCount: 54,
+		inStock: true,
+		stockCount: 7,
+		image: "https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?w=600&auto=format&fit=crop&q=80",
+		isBestSeller: false,
+		isNewArrival: true,
+		isFlashSale: true,
+		features: [
+			"100W PD Output",
+			"18mm Slim Profile",
+			"Status Display Screen"
+		]
+	},
+	{
+		id: "torras-ostand-16p",
+		slug: "torras-magnetic-ostand-360-spin-iphone-16-pro",
+		name: "TORRAS Magnetic Ostand 360° Rotatable Ring Stand Case",
+		nameBn: "টোরাস ম্যাগনেটিক ওস্ট্যান্ড ৩৬০ ডিগ্রি কেস",
+		brand: "TORRAS",
+		categoryId: "cases",
+		compatibleModels: ["iphone-16-pro"],
+		price: 3200,
+		originalPrice: 3800,
+		discountPercent: 16,
+		rating: 4.9,
+		reviewCount: 42,
+		inStock: true,
+		stockCount: 15,
+		image: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=600&auto=format&fit=crop&q=80",
+		isBestSeller: false,
+		isNewArrival: true,
+		features: [
+			"360° Foldable Ring Kickstand",
+			"Mil-Grade Drop Protection",
+			"Halbach MagSafe Array"
+		]
+	},
+	{
+		id: "ugreen-nexode-65w",
+		slug: "ugreen-nexode-65w-gan-3-port-charger",
+		name: "UGREEN Nexode 65W GaN 3-Port Fast Wall Charger",
+		nameBn: "ইউগ্রীন নেক্সোড ৬৫ওয়াট ৩-পোর্ট ফাস্ট ওয়াল চার্জার",
+		brand: "UGREEN",
+		categoryId: "chargers",
+		compatibleModels: [
+			"iphone-16-pro-max",
+			"galaxy-s24-ultra",
+			"xiaomi-14-ultra"
+		],
+		price: 2950,
+		originalPrice: 3500,
+		discountPercent: 16,
+		rating: 4.8,
+		reviewCount: 110,
+		inStock: false,
+		stockCount: 0,
+		image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&auto=format&fit=crop&q=80",
+		isBestSeller: true,
+		isNewArrival: false,
+		features: [
+			"2x USB-C + 1x USB-A",
+			"Thermal Guard Protection",
+			"Foldable US Pins"
+		]
+	},
+	{
+		id: "spigen-ezfit-s24u",
+		slug: "spigen-ez-fit-tempered-glass-galaxy-s24-ultra",
+		name: "Spigen Glas.tR EZ FIT Tempered Glass (2-Pack)",
+		nameBn: "স্পাইজিন ইজেড ফিট টেম্পার্ড গ্লাস গ্যালাক্সি এস২৪ আল্ট্রা",
+		brand: "Spigen",
+		categoryId: "screen-glass",
+		compatibleModels: ["galaxy-s24-ultra"],
+		price: 2150,
+		originalPrice: 2500,
+		discountPercent: 14,
+		rating: 4.7,
+		reviewCount: 65,
+		inStock: true,
+		stockCount: 9,
+		image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600&auto=format&fit=crop&q=80",
+		isBestSeller: false,
+		isNewArrival: true,
+		features: [
+			"Oleophobic Anti-Fingerprint",
+			"Innovative Alignment Frame",
+			"Case Friendly Cut"
+		]
+	}
+];
+export const TRUST_POINTS = [
+	{
+		id: "genuine",
+		title: "100% Genuine Guaranteed",
+		description: "Direct imports from verified global brands. Zero counterfeits.",
+		icon: "ShieldCheckIcon"
+	},
+	{
+		id: "delivery",
+		title: "Dhaka 24h & Islandwide Delivery",
+		description: "Same-day dispatch for Dhaka and fast nationwide courier.",
+		icon: "TruckDeliveryIcon"
+	},
+	{
+		id: "cod",
+		title: "Cash on Delivery Available",
+		description: "Inspect your order on arrival before handing over payment.",
+		icon: "Banknote01Icon"
+	},
+	{
+		id: "warranty",
+		title: "7-Day Replacement Policy",
+		description: "Hassle-free replacement guarantee on manufacturing defects.",
+		icon: "RotateLeft01Icon"
+	},
+	{
+		id: "support",
+		title: "Dedicated Customer Care",
+		description: "Direct phone & WhatsApp assistance 10 AM to 10 PM daily.",
+		icon: "CustomerService01Icon"
+	}
+];
+export const FLASH_SALE_PRODUCTS = PRODUCTS.filter((p) => p.isFlashSale);
+
+//# sourceMappingURL=data:application/json;base64,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QUNiLE1BQU07Q0FDUjtDQUNBO0VBQ0UsSUFBSTtFQUNKLE9BQU87RUFDUCxhQUFhO0VBQ2IsTUFBTTtDQUNSO0NBQ0E7RUFDRSxJQUFJO0VBQ0osT0FBTztFQUNQLGFBQWE7RUFDYixNQUFNO0NBQ1I7Q0FDQTtFQUNFLElBQUk7RUFDSixPQUFPO0VBQ1AsYUFBYTtFQUNiLE1BQU07Q0FDUjtBQUNGO0FBRUEsT0FBTyxNQUFNLHNCQUFpQyxTQUFTLFFBQVEsTUFBTSxFQUFFLFdBQVciLCJuYW1lcyI6W10sInNvdXJjZXMiOlsiY2F0YWxvZy50cyJdLCJ2ZXJzaW9uIjozLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgdHlwZSB7IENhdGVnb3J5LCBQaG9uZUJyYW5kLCBQaG9uZU1vZGVsLCBQcm9kdWN0LCBUcnVzdFBvaW50IH0gZnJvbSAnJGxpYi90eXBlcyc7XG5cbmV4cG9ydCBjb25zdCBDQVRFR09SSUVTOiBDYXRlZ29yeVtdID0gW1xuICB7IGlkOiAnY2FzZXMnLCBzbHVnOiAnY2FzZXMtY292ZXJzJywgbmFtZTogJ0Nhc2VzICYgQ292ZXJzJywgbmFtZUJuOiAn4KaV4KeH4Ka4IOCmkyDgpqzgp43gpq/gpr7gppXgppXgpq3gpr7gprAnLCBpY29uTmFtZTogJ1NoaWVsZDAxSWNvbicsIGl0ZW1Db3VudDogMTQyIH0sXG4gIHsgaWQ6ICdzY3JlZW4tZ2xhc3MnLCBzbHVnOiAnc2NyZWVuLXByb3RlY3RvcnMnLCBuYW1lOiAnU2NyZWVuIFByb3RlY3RvcnMnLCBuYW1lQm46ICfgprjgp43gppXgp43gprDgpr/gpqgg4Kaq4KeN4Kaw4Kaf4KeH4KaV4KeN4Kaf4KawIOCmkyDgppfgp43gprLgpr7gprgnLCBpY29uTmFtZTogJ1NtYXJ0UGhvbmUwMUljb24nLCBpdGVtQ291bnQ6IDg2IH0sXG4gIHsgaWQ6ICdjaGFyZ2VycycsIHNsdWc6ICdjaGFyZ2Vycy1hZGFwdGVycycsIG5hbWU6ICdGYXN0IENoYXJnZXJzJywgbmFtZUJuOiAn4Kar4Ka+4Ka44KeN4KafIOCmmuCmvuCmsOCnjeCmnOCmvuCmsCDgppMg4KaF4KeN4Kav4Ka+4Kah4Ka+4Kaq4KeN4Kaf4Ka+4KawJywgaWNvbk5hbWU6ICdGbGFzaEljb24nLCBpdGVtQ291bnQ6IDY0IH0sXG4gIHsgaWQ6ICdjYWJsZXMnLCBzbHVnOiAnY2FibGVzJywgbmFtZTogJ0NhYmxlcyAmIERvY2tzJywgbmFtZUJuOiAn4KaV4KeH4Kas4Ka/4KayIOCmkyDgppXgpr7gpqjgp4fgppXgp43gpp/gprAnLCBpY29uTmFtZTogJ1VzYkljb24nLCBpdGVtQ291bnQ6IDUzIH0sXG4gIHsgaWQ6ICdtYWdzYWZlJywgc2x1ZzogJ21hZ3NhZmUtd2lyZWxlc3MnLCBuYW1lOiAnTWFnU2FmZSBBY2Nlc3NvcmllcycsIG5hbWVCbjogJ+CmruCnjeCmr+CmvuCml+CmuOCnh+CmqyDgppMg4KaT4Kef4KeN4Kav4Ka+4Kaw4Kay4KeH4Ka4JywgaWNvbk5hbWU6ICdCYXR0ZXJ5Q2hhcmdpbmcwMUljb24nLCBpdGVtQ291bnQ6IDM5IH0sXG4gIHsgaWQ6ICdhdWRpbycsIHNsdWc6ICdhdWRpby1lYXJwaG9uZXMnLCBuYW1lOiAnQXVkaW8gJiBFYXJwaG9uZXMnLCBuYW1lQm46ICfgprngp4fgpqHgpqvgp4vgpqgg4KaTIOCmh+Cnn+CmvuCmsOCmrOCmvuCmoeCmuCcsIGljb25OYW1lOiAnSGVhZHBob25lc0ljb24nLCBpdGVtQ291bnQ6IDQ4IH0sXG5dO1xuXG5leHBvcnQgY29uc3QgUEhPTkVfQlJBTkRTOiBQaG9uZUJyYW5kW10gPSBbXG4gIHsgaWQ6ICdhcHBsZScsIG5hbWU6ICdBcHBsZScsIHNsdWc6ICdhcHBsZScsIGxvZ286ICdBcHBsZScgfSxcbiAgeyBpZDogJ3NhbXN1bmcnLCBuYW1lOiAnU2Ftc3VuZycsIHNsdWc6ICdzYW1zdW5nJywgbG9nbzogJ1NhbXN1bmcnIH0sXG4gIHsgaWQ6ICdnb29nbGUnLCBuYW1lOiAnR29vZ2xlIFBpeGVsJywgc2x1ZzogJ2dvb2dsZS1waXhlbCcsIGxvZ286ICdHb29nbGUnIH0sXG4gIHsgaWQ6ICd4aWFvbWknLCBuYW1lOiAnWGlhb21pJywgc2x1ZzogJ3hpYW9taScsIGxvZ286ICdYaWFvbWknIH0sXG5dO1xuXG5leHBvcnQgY29uc3QgUEhPTkVfTU9ERUxTOiBQaG9uZU1vZGVsW10gPSBbXG4gIC8vIEFwcGxlXG4gIHsgaWQ6ICdpcC0xNi1wcm8tbWF4JywgYnJhbmRJZDogJ2FwcGxlJywgbmFtZTogJ2lQaG9uZSAxNiBQcm8gTWF4Jywgc2x1ZzogJ2lwaG9uZS0xNi1wcm8tbWF4JyB9LFxuICB7IGlkOiAnaXAtMTYtcHJvJywgYnJhbmRJZDogJ2FwcGxlJywgbmFtZTogJ2lQaG9uZSAxNiBQcm8nLCBzbHVnOiAnaXBob25lLTE2LXBybycgfSxcbiAgeyBpZDogJ2lwLTE1LXByby1tYXgnLCBicmFuZElkOiAnYXBwbGUnLCBuYW1lOiAnaVBob25lIDE1IFBybyBNYXgnLCBzbHVnOiAnaXBob25lLTE1LXByby1tYXgnIH0sXG4gIHsgaWQ6ICdpcC0xNS1wcm8nLCBicmFuZElkOiAnYXBwbGUnLCBuYW1lOiAnaVBob25lIDE1IFBybycsIHNsdWc6ICdpcGhvbmUtMTUtcHJvJyB9LFxuICB7IGlkOiAnaXAtMTUnLCBicmFuZElkOiAnYXBwbGUnLCBuYW1lOiAnaVBob25lIDE1Jywgc2x1ZzogJ2lwaG9uZS0xNScgfSxcbiAgeyBpZDogJ2lwLTE0LXByby1tYXgnLCBicmFuZElkOiAnYXBwbGUnLCBuYW1lOiAnaVBob25lIDE0IFBybyBNYXgnLCBzbHVnOiAnaXBob25lLTE0LXByby1tYXgnIH0sXG4gIC8vIFNhbXN1bmdcbiAgeyBpZDogJ3NhbS1zMjQtdWx0cmEnLCBicmFuZElkOiAnc2Ftc3VuZycsIG5hbWU6ICdHYWxheHkgUzI0IFVsdHJhJywgc2x1ZzogJ2dhbGF4eS1zMjQtdWx0cmEnIH0sXG4gIHsgaWQ6ICdzYW0tczI0LXBsdXMnLCBicmFuZElkOiAnc2Ftc3VuZycsIG5hbWU6ICdHYWxheHkgUzI0KycsIHNsdWc6ICdnYWxheHktczI0LXBsdXMnIH0sXG4gIHsgaWQ6ICdzYW0tczIzLXVsdHJhJywgYnJhbmRJZDogJ3NhbXN1bmcnLCBuYW1lOiAnR2FsYXh5IFMyMyBVbHRyYScsIHNsdWc6ICdnYWxheHktczIzLXVsdHJhJyB9LFxuICB7IGlkOiAnc2FtLWE1NScsIGJyYW5kSWQ6ICdzYW1zdW5nJywgbmFtZTogJ0dhbGF4eSBBNTUgNUcnLCBzbHVnOiAnZ2FsYXh5LWE1NS01ZycgfSxcbiAgLy8gR29vZ2xlXG4gIHsgaWQ6ICdweC05LXByby14bCcsIGJyYW5kSWQ6ICdnb29nbGUnLCBuYW1lOiAnUGl4ZWwgOSBQcm8gWEwnLCBzbHVnOiAncGl4ZWwtOS1wcm8teGwnIH0sXG4gIHsgaWQ6ICdweC05LXBybycsIGJyYW5kSWQ6ICdnb29nbGUnLCBuYW1lOiAnUGl4ZWwgOSBQcm8nLCBzbHVnOiAncGl4ZWwtOS1wcm8nIH0sXG4gIHsgaWQ6ICdweC04LXBybycsIGJyYW5kSWQ6ICdnb29nbGUnLCBuYW1lOiAnUGl4ZWwgOCBQcm8nLCBzbHVnOiAncGl4ZWwtOC1wcm8nIH0sXG4gIC8vIFhpYW9taVxuICB7IGlkOiAneGktMTQtdWx0cmEnLCBicmFuZElkOiAneGlhb21pJywgbmFtZTogJ1hpYW9taSAxNCBVbHRyYScsIHNsdWc6ICd4aWFvbWktMTQtdWx0cmEnIH0sXG4gIHsgaWQ6ICd4aS1yZWRtaS1ub3RlLTEzLXBybycsIGJyYW5kSWQ6ICd4aWFvbWknLCBuYW1lOiAnUmVkbWkgTm90ZSAxMyBQcm8rJywgc2x1ZzogJ3JlZG1pLW5vdGUtMTMtcHJvLXBsdXMnIH0sXG5dO1xuXG5leHBvcnQgY29uc3QgUFJPRFVDVFM6IFByb2R1Y3RbXSA9IFtcbiAge1xuICAgIGlkOiAnc3BpZ2VuLXVsdHJhLTE2cG0nLFxuICAgIHNsdWc6ICdzcGlnZW4tdWx0cmEtaHlicmlkLW1hZ3NhZmUtaXBob25lLTE2LXByby1tYXgnLFxuICAgIG5hbWU6ICdTcGlnZW4gVWx0cmEgSHlicmlkIE1hZ1NhZmUgRnJvc3RlZCBDYXNlJyxcbiAgICBuYW1lQm46ICfgprjgp43gpqrgpr7gpofgppzgpr/gpqgg4KaG4Kay4KeN4Kaf4KeN4Kaw4Ka+IOCmueCmvuCmh+CmrOCnjeCmsOCmv+CmoSDgpq7gp43gpq/gpr7gppfgprjgp4fgpqsg4Kar4KeN4Kaw4Ka44KeN4Kaf4KeH4KahIOCmleCnh+CmuCcsXG4gICAgYnJhbmQ6ICdTcGlnZW4nLFxuICAgIGNhdGVnb3J5SWQ6ICdjYXNlcycsXG4gICAgY29tcGF0aWJsZU1vZGVsczogWydpcGhvbmUtMTYtcHJvLW1heCddLFxuICAgIHByaWNlOiAyNDUwLFxuICAgIG9yaWdpbmFsUHJpY2U6IDI4NTAsXG4gICAgZGlzY291bnRQZXJjZW50OiAxNCxcbiAgICByYXRpbmc6IDQuOSxcbiAgICByZXZpZXdDb3VudDogMTI4LFxuICAgIGluU3RvY2s6IHRydWUsXG4gICAgc3RvY2tDb3VudDogMTgsXG4gICAgaW1hZ2U6ICdodHRwczovL2ltYWdlcy51bnNwbGFzaC5jb20vcGhvdG8tMTYwMzMxMzAxMTEwMS0zMjBmMjZhNGY2ZjY/dz02MDAmYXV0bz1mb3JtYXQmZml0PWNyb3AmcT04MCcsXG4gICAgaXNCZXN0U2VsbGVyOiB0cnVlLFxuICAgIGlzRmxhc2hTYWxlOiB0cnVlLFxuICAgIGZlYXR1cmVzOiBbJ0FpciBDdXNoaW9uIFRlY2gnLCAnU3Ryb25nIE1hZ1NhZmUgTWFnbmV0JywgJ0FudGktWWVsbG93aW5nIFRQVSddXG4gIH0sXG4gIHtcbiAgICBpZDogJ2Fua2VyLW5hbm8zLTMwdycsXG4gICAgc2x1ZzogJ2Fua2VyLTUxMS1uYW5vLTMtMzB3LWdhbi1mYXN0LWNoYXJnZXInLFxuICAgIG5hbWU6ICdBbmtlciA1MTEgTmFubyAzIDMwVyBHYU4gRmFzdCBDaGFyZ2VyJyxcbiAgICBuYW1lQm46ICfgpoXgp43gpq/gpr7gppngp43gppXgprAg4Ker4Ken4KenIOCmqOCnjeCmr+CmvuCmqOCniyDgp6kg4Kep4Kem4KaT4Kef4Ka+4KafIOCmq+CmvuCmuOCnjeCmnyDgpprgpr7gprDgp43gppzgpr7gprAnLFxuICAgIGJyYW5kOiAnQW5rZXInLFxuICAgIGNhdGVnb3J5SWQ6ICdjaGFyZ2VycycsXG4gICAgY29tcGF0aWJsZU1vZGVsczogWydpcGhvbmUtMTYtcHJvLW1heCcsICdpcGhvbmUtMTYtcHJvJywgJ2lwaG9uZS0xNS1wcm8tbWF4JywgJ2lwaG9uZS0xNS1wcm8nLCAnZ2FsYXh5LXMyNC11bHRyYScsICdwaXhlbC05LXBybyddLFxuICAgIHByaWNlOiAxOTUwLFxuICAgIG9yaWdpbmFsUHJpY2U6IDI0MDAsXG4gICAgZGlzY291bnRQZXJjZW50OiAxOSxcbiAgICByYXRpbmc6IDQuOCxcbiAgICByZXZpZXdDb3VudDogMzQyLFxuICAgIGluU3RvY2s6IHRydWUsXG4gICAgc3RvY2tDb3VudDogNCwgLy8gbG93IHN0b2NrIHRlc3RcbiAgICBpbWFnZTogJ2h0dHBzOi8vaW1hZ2VzLnVuc3BsYXNoLmNvbS9waG90by0xNTgzODYzNzg4NDM0LWU1OGEzNjMzMGNmMD93PTYwMCZhdXRvPWZvcm1hdCZmaXQ9Y3JvcCZxPTgwJyxcbiAgICBpc0Jlc3RTZWxsZXI6IHRydWUsXG4gICAgaXNGbGFzaFNhbGU6IHRydWUsXG4gICAgZmVhdHVyZXM6IFsnR2FOIElJIFRlY2hub2xvZ3knLCAnVWx0cmEtQ29tcGFjdCBTaXplJywgJ1Bvd2VySVEgMy4wIEZhc3QgQ2hhcmdlJ11cbiAgfSxcbiAge1xuICAgIGlkOiAnZXNyLWFybW9yaXRlLTE2cG0nLFxuICAgIHNsdWc6ICdlc3ItYXJtb3JpdGUtOWgtc2NyZWVuLXByb3RlY3Rvci1pcGhvbmUtMTYtcHJvLW1heCcsXG4gICAgbmFtZTogJ0VTUiBBcm1vcml0ZSA5SCBVbHRyYS1Ub3VnaCBUZW1wZXJlZCBHbGFzcyAoMi1QYWNrKScsXG4gICAgbmFtZUJuOiAn4KaH4KaP4Ka44KaG4KawIOCmhuCmsOCnjeCmruCmvuCmsOCmvuCmh+CmnyDgp6/gpo/gpofgppog4Kaf4KeH4Kau4KeN4Kaq4Ka+4Kaw4KeN4KahIOCml+CnjeCmsuCmvuCmuCAo4KeoIOCmquCnjeCmr+CmvuCmlSknLFxuICAgIGJyYW5kOiAnRVNSJyxcbiAgICBjYXRlZ29yeUlkOiAnc2NyZWVuLWdsYXNzJyxcbiAgICBjb21wYXRpYmxlTW9kZWxzOiBbJ2lwaG9uZS0xNi1wcm8tbWF4J10sXG4gICAgcHJpY2U6IDE2NTAsXG4gICAgb3JpZ2luYWxQcmljZTogMTk1MCxcbiAgICBkaXNjb3VudFBlcmNlbnQ6IDE1LFxuICAgIHJhdGluZzogNC43LFxuICAgIHJldmlld0NvdW50OiA4OSxcbiAgICBpblN0b2NrOiB0cnVlLFxuICAgIHN0b2NrQ291bnQ6IDIyLFxuICAgIGltYWdlOiAnaHR0cHM6Ly9pbWFnZXMudW5zcGxhc2guY29tL3Bob3RvLTE1OTI4OTk2Nzc5NzctOWMxMGNhNTg4YmJkP3c9NjAwJmF1dG89Zm9ybWF0JmZpdD1jcm9wJnE9ODAnLFxuICAgIGlzQmVzdFNlbGxlcjogdHJ1ZSxcbiAgICBmZWF0dXJlczogWycxMTAgbGIgSW1wYWN0IFJlc2lzdGFuY2UnLCAnQXV0by1BbGlnbm1lbnQgVHJheScsICdVbHRyYSBIRCBDbGFyaXR5J11cbiAgfSxcbiAge1xuICAgIGlkOiAnbmlsbGtpbi1jYW1zaGllbGQtczI0dScsXG4gICAgc2x1ZzogJ25pbGxraW4tY2Ftc2hpZWxkLXByby1tYWduZXRpYy1nYWxheHktczI0LXVsdHJhJyxcbiAgICBuYW1lOiAnTmlsbGtpbiBDYW1TaGllbGQgUHJvIEFybW9yIE1hZ25ldGljIENhc2UnLFxuICAgIG5hbWVCbjogJ+CmqOCmv+CmsuCmleCmv+CmqCDgppXgp43gpq/gpr7gpq7gprbgpr/gprLgp43gpqEg4Kaq4KeN4Kaw4KeLIOCmruCnjeCmr+CmvuCml+CmqOCnh+Cmn+Cmv+CmlSDgppXgpq3gpr7gprAnLFxuICAgIGJyYW5kOiAnTmlsbGtpbicsXG4gICAgY2F0ZWdvcnlJZDogJ2Nhc2VzJyxcbiAgICBjb21wYXRpYmxlTW9kZWxzOiBbJ2dhbGF4eS1zMjQtdWx0cmEnXSxcbiAgICBwcmljZTogMTg1MCxcbiAgICBvcmlnaW5hbFByaWNlOiAyMjAwLFxuICAgIGRpc2NvdW50UGVyY2VudDogMTYsXG4gICAgcmF0aW5nOiA0LjgsXG4gICAgcmV2aWV3Q291bnQ6IDc2LFxuICAgIGluU3RvY2s6IHRydWUsXG4gICAgc3RvY2tDb3VudDogMTIsXG4gICAgaW1hZ2U6ICdodHRwczovL2ltYWdlcy51bnNwbGFzaC5jb20vcGhvdG8tMTU4MDkxMDA1MTA3NC0zZWI2OTQ4ODY1MDU/dz02MDAmYXV0bz1mb3JtYXQmZml0PWNyb3AmcT04MCcsXG4gICAgaXNCZXN0U2VsbGVyOiBmYWxzZSxcbiAgICBpc05ld0Fycml2YWw6IHRydWUsXG4gICAgaXNGbGFzaFNhbGU6IHRydWUsXG4gICAgZmVhdHVyZXM6IFsnUGF0ZW50ZWQgQ2FtZXJhIExlbnMgU2xpZGVyJywgJ0ltcGFjdCBSZXNpc3RhbnQgQnVtcGVyJywgJ1dpcmVsZXNzIENoYXJnZSBGcmllbmRseSddXG4gIH0sXG4gIHtcbiAgICBpZDogJ2Jhc2V1cy1ibGFkZS1wb3dlcmJhbmsnLFxuICAgIHNsdWc6ICdiYXNldXMtYmxhZGUtMTAwdy11bHRyYS1zbGltLWxhcHRvcC1wb3dlci1iYW5rJyxcbiAgICBuYW1lOiAnQmFzZXVzIEJsYWRlIDEwMFcgVWx0cmEtU2xpbSBEaWdpdGFsIFBvd2VyIEJhbmsgKDIwMDAwbUFoKScsXG4gICAgbmFtZUJuOiAn4Kas4KeH4Ka44Ka+4Ka4IOCmrOCnjeCmsuCnh+CmoSDgp6fgp6bgp6bgppPgp5/gpr7gpp8g4Kah4Ka/4Kac4Ka/4Kaf4Ka+4KayIOCmoeCmv+CmuOCmquCnjeCmsuCnhyDgpqrgpr7gppPgp5/gpr7gprAg4Kas4KeN4Kav4Ka+4KaC4KaVJyxcbiAgICBicmFuZDogJ0Jhc2V1cycsXG4gICAgY2F0ZWdvcnlJZDogJ2NoYXJnZXJzJyxcbiAgICBjb21wYXRpYmxlTW9kZWxzOiBbJ2lwaG9uZS0xNi1wcm8tbWF4JywgJ2dhbGF4eS1zMjQtdWx0cmEnLCAncGl4ZWwtOS1wcm8teGwnXSxcbiAgICBwcmljZTogNTQwMCxcbiAgICBvcmlnaW5hbFByaWNlOiA2MjAwLFxuICAgIGRpc2NvdW50UGVyY2VudDogMTMsXG4gICAgcmF0aW5nOiA0LjksXG4gICAgcmV2aWV3Q291bnQ6IDU0LFxuICAgIGluU3RvY2s6IHRydWUsXG4gICAgc3RvY2tDb3VudDogNyxcbiAgICBpbWFnZTogJ2h0dHBzOi8vaW1hZ2VzLnVuc3BsYXNoLmNvbS9waG90by0xNjA5MDgxMjE5MDkwLWE2ZDgxZDMwODViZj93PTYwMCZhdXRvPWZvcm1hdCZmaXQ9Y3JvcCZxPTgwJyxcbiAgICBpc0Jlc3RTZWxsZXI6IGZhbHNlLFxuICAgIGlzTmV3QXJyaXZhbDogdHJ1ZSxcbiAgICBpc0ZsYXNoU2FsZTogdHJ1ZSxcbiAgICBmZWF0dXJlczogWycxMDBXIFBEIE91dHB1dCcsICcxOG1tIFNsaW0gUHJvZmlsZScsICdTdGF0dXMgRGlzcGxheSBTY3JlZW4nXVxuICB9LFxuICB7XG4gICAgaWQ6ICd0b3JyYXMtb3N0YW5kLTE2cCcsXG4gICAgc2x1ZzogJ3RvcnJhcy1tYWduZXRpYy1vc3RhbmQtMzYwLXNwaW4taXBob25lLTE2LXBybycsXG4gICAgbmFtZTogJ1RPUlJBUyBNYWduZXRpYyBPc3RhbmQgMzYwwrAgUm90YXRhYmxlIFJpbmcgU3RhbmQgQ2FzZScsXG4gICAgbmFtZUJuOiAn4Kaf4KeL4Kaw4Ka+4Ka4IOCmruCnjeCmr+CmvuCml+CmqOCnh+Cmn+Cmv+CmlSDgppPgprjgp43gpp/gp43gpq/gpr7gpqjgp43gpqEg4Kep4Kes4KemIOCmoeCmv+Cml+CnjeCmsOCmvyDgppXgp4fgprgnLFxuICAgIGJyYW5kOiAnVE9SUkFTJyxcbiAgICBjYXRlZ29yeUlkOiAnY2FzZXMnLFxuICAgIGNvbXBhdGlibGVNb2RlbHM6IFsnaXBob25lLTE2LXBybyddLFxuICAgIHByaWNlOiAzMjAwLFxuICAgIG9yaWdpbmFsUHJpY2U6IDM4MDAsXG4gICAgZGlzY291bnRQZXJjZW50OiAxNixcbiAgICByYXRpbmc6IDQuOSxcbiAgICByZXZpZXdDb3VudDogNDIsXG4gICAgaW5TdG9jazogdHJ1ZSxcbiAgICBzdG9ja0NvdW50OiAxNSxcbiAgICBpbWFnZTogJ2h0dHBzOi8vaW1hZ2VzLnVuc3BsYXNoLmNvbS9waG90by0xNTQxODA3MDg0LTVjNTJiNmIzYWRlZj93PTYwMCZhdXRvPWZvcm1hdCZmaXQ9Y3JvcCZxPTgwJyxcbiAgICBpc0Jlc3RTZWxsZXI6IGZhbHNlLFxuICAgIGlzTmV3QXJyaXZhbDogdHJ1ZSxcbiAgICBmZWF0dXJlczogWyczNjDCsCBGb2xkYWJsZSBSaW5nIEtpY2tzdGFuZCcsICdNaWwtR3JhZGUgRHJvcCBQcm90ZWN0aW9uJywgJ0hhbGJhY2ggTWFnU2FmZSBBcnJheSddXG4gIH0sXG4gIHtcbiAgICBpZDogJ3VncmVlbi1uZXhvZGUtNjV3JyxcbiAgICBzbHVnOiAndWdyZWVuLW5leG9kZS02NXctZ2FuLTMtcG9ydC1jaGFyZ2VyJyxcbiAgICBuYW1lOiAnVUdSRUVOIE5leG9kZSA2NVcgR2FOIDMtUG9ydCBGYXN0IFdhbGwgQ2hhcmdlcicsXG4gICAgbmFtZUJuOiAn4KaH4KaJ4KaX4KeN4Kaw4KeA4KaoIOCmqOCnh+CmleCnjeCmuOCni+CmoSDgp6zgp6vgppPgp5/gpr7gpp8g4KepLeCmquCni+CmsOCnjeCmnyDgpqvgpr7gprjgp43gpp8g4KaT4Kef4Ka+4KayIOCmmuCmvuCmsOCnjeCmnOCmvuCmsCcsXG4gICAgYnJhbmQ6ICdVR1JFRU4nLFxuICAgIGNhdGVnb3J5SWQ6ICdjaGFyZ2VycycsXG4gICAgY29tcGF0aWJsZU1vZGVsczogWydpcGhvbmUtMTYtcHJvLW1heCcsICdnYWxheHktczI0LXVsdHJhJywgJ3hpYW9taS0xNC11bHRyYSddLFxuICAgIHByaWNlOiAyOTUwLFxuICAgIG9yaWdpbmFsUHJpY2U6IDM1MDAsXG4gICAgZGlzY291bnRQZXJjZW50OiAxNixcbiAgICByYXRpbmc6IDQuOCxcbiAgICByZXZpZXdDb3VudDogMTEwLFxuICAgIGluU3RvY2s6IGZhbHNlLCAvLyBvdXQgb2Ygc3RvY2sgdGVzdFxuICAgIHN0b2NrQ291bnQ6IDAsXG4gICAgaW1hZ2U6ICdodHRwczovL2ltYWdlcy51bnNwbGFzaC5jb20vcGhvdG8tMTU4Mzg2Mzc4ODQzNC1lNThhMzYzMzBjZjA/dz02MDAmYXV0bz1mb3JtYXQmZml0PWNyb3AmcT04MCcsXG4gICAgaXNCZXN0U2VsbGVyOiB0cnVlLFxuICAgIGlzTmV3QXJyaXZhbDogZmFsc2UsXG4gICAgZmVhdHVyZXM6IFsnMnggVVNCLUMgKyAxeCBVU0ItQScsICdUaGVybWFsIEd1YXJkIFByb3RlY3Rpb24nLCAnRm9sZGFibGUgVVMgUGlucyddXG4gIH0sXG4gIHtcbiAgICBpZDogJ3NwaWdlbi1lemZpdC1zMjR1JyxcbiAgICBzbHVnOiAnc3BpZ2VuLWV6LWZpdC10ZW1wZXJlZC1nbGFzcy1nYWxheHktczI0LXVsdHJhJyxcbiAgICBuYW1lOiAnU3BpZ2VuIEdsYXMudFIgRVogRklUIFRlbXBlcmVkIEdsYXNzICgyLVBhY2spJyxcbiAgICBuYW1lQm46ICfgprjgp43gpqrgpr7gpofgppzgpr/gpqgg4KaH4Kac4KeH4KahIOCmq+Cmv+CmnyDgpp/gp4fgpq7gp43gpqrgpr7gprDgp43gpqEg4KaX4KeN4Kay4Ka+4Ka4IOCml+CnjeCmr+CmvuCmsuCmvuCmleCnjeCmuOCmvyDgpo/gprjgp6jgp6og4KaG4Kay4KeN4Kaf4KeN4Kaw4Ka+JyxcbiAgICBicmFuZDogJ1NwaWdlbicsXG4gICAgY2F0ZWdvcnlJZDogJ3NjcmVlbi1nbGFzcycsXG4gICAgY29tcGF0aWJsZU1vZGVsczogWydnYWxheHktczI0LXVsdHJhJ10sXG4gICAgcHJpY2U6IDIxNTAsXG4gICAgb3JpZ2luYWxQcmljZTogMjUwMCxcbiAgICBkaXNjb3VudFBlcmNlbnQ6IDE0LFxuICAgIHJhdGluZzogNC43LFxuICAgIHJldmlld0NvdW50OiA2NSxcbiAgICBpblN0b2NrOiB0cnVlLFxuICAgIHN0b2NrQ291bnQ6IDksXG4gICAgaW1hZ2U6ICdodHRwczovL2ltYWdlcy51bnNwbGFzaC5jb20vcGhvdG8tMTU5Mjg5OTY3Nzk3Ny05YzEwY2E1ODhiYmQ/dz02MDAmYXV0bz1mb3JtYXQmZml0PWNyb3AmcT04MCcsXG4gICAgaXNCZXN0U2VsbGVyOiBmYWxzZSxcbiAgICBpc05ld0Fycml2YWw6IHRydWUsXG4gICAgZmVhdHVyZXM6IFsnT2xlb3Bob2JpYyBBbnRpLUZpbmdlcnByaW50JywgJ0lubm92YXRpdmUgQWxpZ25tZW50IEZyYW1lJywgJ0Nhc2UgRnJpZW5kbHkgQ3V0J11cbiAgfVxuXTtcblxuZXhwb3J0IGNvbnN0IFRSVVNUX1BPSU5UUzogVHJ1c3RQb2ludFtdID0gW1xuICB7XG4gICAgaWQ6ICdnZW51aW5lJyxcbiAgICB0aXRsZTogJzEwMCUgR2VudWluZSBHdWFyYW50ZWVkJyxcbiAgICBkZXNjcmlwdGlvbjogJ0RpcmVjdCBpbXBvcnRzIGZyb20gdmVyaWZpZWQgZ2xvYmFsIGJyYW5kcy4gWmVybyBjb3VudGVyZmVpdHMuJyxcbiAgICBpY29uOiAnU2hpZWxkQ2hlY2tJY29uJ1xuICB9LFxuICB7XG4gICAgaWQ6ICdkZWxpdmVyeScsXG4gICAgdGl0bGU6ICdEaGFrYSAyNGggJiBJc2xhbmR3aWRlIERlbGl2ZXJ5JyxcbiAgICBkZXNjcmlwdGlvbjogJ1NhbWUtZGF5IGRpc3BhdGNoIGZvciBEaGFrYSBhbmQgZmFzdCBuYXRpb253aWRlIGNvdXJpZXIuJyxcbiAgICBpY29uOiAnVHJ1Y2tEZWxpdmVyeUljb24nXG4gIH0sXG4gIHtcbiAgICBpZDogJ2NvZCcsXG4gICAgdGl0bGU6ICdDYXNoIG9uIERlbGl2ZXJ5IEF2YWlsYWJsZScsXG4gICAgZGVzY3JpcHRpb246ICdJbnNwZWN0IHlvdXIgb3JkZXIgb24gYXJyaXZhbCBiZWZvcmUgaGFuZGluZyBvdmVyIHBheW1lbnQuJyxcbiAgICBpY29uOiAnQmFua25vdGUwMUljb24nXG4gIH0sXG4gIHtcbiAgICBpZDogJ3dhcnJhbnR5JyxcbiAgICB0aXRsZTogJzctRGF5IFJlcGxhY2VtZW50IFBvbGljeScsXG4gICAgZGVzY3JpcHRpb246ICdIYXNzbGUtZnJlZSByZXBsYWNlbWVudCBndWFyYW50ZWUgb24gbWFudWZhY3R1cmluZyBkZWZlY3RzLicsXG4gICAgaWNvbjogJ1JvdGF0ZUxlZnQwMUljb24nXG4gIH0sXG4gIHtcbiAgICBpZDogJ3N1cHBvcnQnLFxuICAgIHRpdGxlOiAnRGVkaWNhdGVkIEN1c3RvbWVyIENhcmUnLFxuICAgIGRlc2NyaXB0aW9uOiAnRGlyZWN0IHBob25lICYgV2hhdHNBcHAgYXNzaXN0YW5jZSAxMCBBTSB0byAxMCBQTSBkYWlseS4nLFxuICAgIGljb246ICdDdXN0b21lclNlcnZpY2UwMUljb24nXG4gIH1cbl07XG5cbmV4cG9ydCBjb25zdCBGTEFTSF9TQUxFX1BST0RVQ1RTOiBQcm9kdWN0W10gPSBQUk9EVUNUUy5maWx0ZXIoKHApID0+IHAuaXNGbGFzaFNhbGUpO1xuIl19

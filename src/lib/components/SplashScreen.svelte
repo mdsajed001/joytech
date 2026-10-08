@@ -1,0 +1,188 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+
+  let { ondismiss }: { ondismiss?: () => void } = $props();
+
+  let visible = $state(true);
+  let safetyTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function dismiss() {
+    if (!visible) return;
+    visible = false;
+    if (safetyTimer) clearTimeout(safetyTimer);
+    ondismiss?.();
+  }
+
+  onMount(() => {
+    safetyTimer = setTimeout(dismiss, 2500);
+    return () => {
+      if (safetyTimer) clearTimeout(safetyTimer);
+    };
+  });
+
+  function handleAnimationEnd(e: AnimationEvent) {
+    if (e.animationName === 'splashSlideOut') {
+      dismiss();
+    }
+  }
+</script>
+
+{#if visible}
+  <div
+    class="splash-overlay"
+    aria-hidden="true"
+    onanimationend={handleAnimationEnd}
+  >
+    <!-- Ambient Bubbles -->
+    <div class="pointer-events-none absolute inset-0 overflow-hidden">
+      <div class="bubble bubble-1"></div>
+      <div class="bubble bubble-2"></div>
+      <div class="bubble bubble-3"></div>
+    </div>
+
+    <!-- Logo -->
+    <div class="splash-logo-wrap">
+      <svg
+        class="splash-logo"
+        width="120"
+        height="128"
+        viewBox="0 0 241 256"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Joy Telecom"
+      >
+        <g class="logo-paths">
+          <path
+            class="logo-path"
+            d="M179.307 152.588C182.9 151.972 184.395 149.675 185.801 146.705C187.239 143.668 188.493 140.568 188.896 137.228C189.23 134.468 189.397 131.674 189.607 128.904L190.768 113.189C191.089 108.502 190.781 105.468 192.837 100.943C195.947 94.0992 198.68 93.1639 205.052 89.8097L215.094 84.4564C218.676 82.5078 222.269 80.5786 225.874 78.6687C229.892 76.5172 236.528 71.8603 239.626 78.5423C240.092 79.5476 240.167 80.4336 240.536 81.3893L240.578 81.497V118.814C240.383 119.261 240.195 120.479 240.105 121.008C239.26 125.96 236.106 129.631 233.187 133.714L225.073 145.157L210.367 166.039C208.017 169.374 205.706 172.852 203.256 176.102L203.237 202.355C203.24 205.216 203.42 212.766 203.034 215.236C202.692 217.346 201.863 219.357 200.606 221.123C199.792 222.272 198.766 223.346 197.555 224.114C193.79 226.506 189.813 228.68 186.016 231.01L154.042 250.372C153.306 250.811 152.327 251.371 151.577 250.765C151.281 249.217 151.376 245.804 151.376 244.049L151.441 191.353C150.018 190.67 148.012 189.481 146.563 188.681L136.621 183.185C134.157 181.83 131.27 180.591 128.971 179.106C124.483 176.205 124.9 170.468 124.921 165.912C124.916 163.052 124.925 160.191 124.95 157.33C124.97 152.946 124.727 146.338 125.043 142.13C125.148 140.762 125.403 139.409 125.804 138.092C126.749 134.985 129.155 131.32 131.753 129.3C133.756 127.743 137.43 126.076 139.825 124.77C147.191 120.755 154.587 116.789 162.011 112.872C164.474 111.582 166.406 110.183 169.257 111.043C171.391 111.687 172.799 112.901 173.557 114.911C174.617 117.712 174.368 121.795 174.359 124.837C174.31 129.149 174.45 133.363 174.631 137.683C174.8 141.704 174.179 146.255 175.966 150.024C176.686 151.544 177.693 152.131 179.307 152.588Z"
+          />
+          <path
+            class="logo-path"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M118.514 0.0698652C124.019 -0.463746 131.013 2.17646 136.051 4.00391C137.151 4.40265 139.601 5.93158 140.751 6.5685L150.501 11.9581C163.878 19.2398 177.204 26.6069 190.478 34.0582L209.061 44.2652C212.677 46.2208 216.336 48.1709 219.881 50.2416C222.963 52.0432 226.013 55.4984 226.13 59.0972C226.342 65.5386 219.355 68.1107 214.411 70.7708L204.508 76.1521L144.231 109.072C134.777 114.275 130.533 117.338 119.31 117.631C109.813 117.218 107.246 116.1 99.2247 111.774L89.2263 106.333C77.4308 99.9443 65.6758 93.4873 53.9617 86.9632L28.048 72.791L20.4613 68.7305C16.9623 66.8721 12.0469 64.7953 11.4853 60.5083C10.9748 56.6098 14.785 53.383 17.9186 51.5374C22.1633 49.0373 26.6519 46.8418 30.9774 44.47L63.9083 26.4679C74.4396 20.5289 85.0383 14.6989 95.7019 8.97893C103.217 5.03423 109.722 0.922383 118.514 0.0698652ZM128.071 38.8797C124.565 36.9137 122.472 35.3095 118.168 35.6881C115.117 35.9992 112.716 37.7435 110.09 39.1742C106.601 41.0361 103.131 42.9288 99.6791 44.852L86.3538 52.0881C83.9411 53.3934 79.8949 55.2254 77.87 57.0819C76.4277 58.4042 77.5515 60.4298 79.0715 61.0854C80.9716 62.1756 82.8873 63.1068 84.7911 64.1333L97.6344 71.0632L109.061 77.2618C113.199 79.5057 115.376 81.3205 120.347 81.1584C124.254 80.6683 127.851 78.2132 131.266 76.3382L143.165 69.7917C148.457 66.8612 153.903 64.1073 159.183 61.1506C163.007 59.009 160.892 56.9163 158.106 55.3708C150.3 51.04 142.447 46.7936 134.624 42.4936L128.071 38.8797Z"
+          />
+          <path
+            class="logo-path"
+            d="M5.03 73.5235C6.89187 73.3814 8.54545 73.7972 10.1794 74.6442C15.238 77.2662 20.2591 80.178 25.245 82.9299C35.988 88.8515 46.6901 94.8406 57.3503 100.897L87.1833 117.661C90.8434 119.71 94.9119 121.825 98.461 123.856C104.407 127.258 109.253 134.993 110.675 141.448C111.538 145.367 111.396 148.309 111.391 152.366L111.392 235.018C111.391 240.487 111.533 245.449 108.202 250.301C104.177 256.163 96.7996 257.384 90.372 254.51C88.2151 253.545 85.6771 251.701 83.6393 250.422L71.5404 242.908L29.4953 216.731C24.3334 213.653 19.2856 210.339 14.1528 207.216C10.0115 204.782 7.09606 202.913 4.30923 199.001C-0.584166 192.134 0.0420161 186.165 0.0570442 178.209L0.0651039 163.445L0.0457911 152.798C0.0396606 149.51 -0.309439 145.04 1.52855 142.165C2.42714 140.782 3.86975 139.799 5.53352 139.439C9.10692 138.63 11.9302 140.572 14.7331 142.341C16.1373 143.226 17.6054 144.067 19.0426 144.906C26.3953 149.146 33.7134 153.442 40.9959 157.791C48.5612 162.366 48.4264 170.871 48.178 178.383C48.0001 183.762 49.4773 188.185 54.4356 191.159C58.3298 193.495 61.2843 193.238 62.3124 188.452C62.6471 186.76 62.4511 184.135 62.4406 182.326C62.4227 179.431 62.4223 176.536 62.4391 173.642L62.4501 162.84C62.4567 158.46 63.0458 152.844 58.7738 149.861C57.4068 148.905 55.7462 148.062 54.2764 147.228L44.9491 141.962L14.634 124.471C11.2601 122.543 6.96848 120.457 3.95276 118.206C-0.558628 114.838 0.0615868 108.052 0.0681875 103.313L0.0790188 92.3439L0.0741056 84.7345C0.0348646 79.9769 -0.88577 75.0248 5.03 73.5235Z"
+          />
+        </g>
+      </svg>
+    </div>
+  </div>
+{/if}
+
+<style>
+  /* ─── Overlay ─── */
+  .splash-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0066FF 0%, #0055D4 50%, #003E9E 100%);
+    animation: splashSlideOut 0.55s cubic-bezier(0.76, 0, 0.24, 1) 1.55s both;
+  }
+
+  /* ─── Bubbles ─── */
+  .bubble {
+    position: absolute;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.05) 70%, transparent 100%);
+    backdrop-filter: blur(2px);
+    pointer-events: none;
+  }
+
+  .bubble-1 {
+    width: 260px;
+    height: 260px;
+    top: 5%;
+    left: 12%;
+    animation: floatBubble1 16s ease-in-out infinite alternate;
+  }
+  .bubble-2 {
+    width: 180px;
+    height: 180px;
+    top: 55%;
+    left: 5%;
+    animation: floatBubble2 20s ease-in-out infinite alternate;
+  }
+  .bubble-3 {
+    width: 300px;
+    height: 300px;
+    bottom: 2%;
+    right: 8%;
+    animation: floatBubble1 18s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes floatBubble1 {
+    0%   { transform: translateY(0px) translateX(0px) scale(1); }
+    50%  { transform: translateY(-24px) translateX(12px) scale(1.06); }
+    100% { transform: translateY(16px) translateX(-16px) scale(0.96); }
+  }
+  @keyframes floatBubble2 {
+    0%   { transform: translateY(0px) translateX(0px) scale(1); }
+    50%  { transform: translateY(20px) translateX(-12px) scale(1.04); }
+    100% { transform: translateY(-16px) translateX(12px) scale(0.94); }
+  }
+
+  /* ─── Logo Wrapper ─── */
+  .splash-logo-wrap {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ─── Logo ─── */
+  .splash-logo {
+    /* Phase 1 reveal: opacity + scale in */
+    animation: splashLogoReveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0s both;
+    filter: drop-shadow(0 8px 32px rgba(0,0,0,0.25));
+  }
+
+  /* ─── Paths: stroke → fill sequence ─── */
+  .logo-path {
+    fill: transparent;
+    stroke: white;
+    stroke-width: 7;
+    stroke-linejoin: round;
+    /* Phase 2 fill: delayed after reveal */
+    animation: splashLogoFill 0.45s ease-out 0.7s both;
+  }
+
+  /* ─── Keyframes ─── */
+  @keyframes splashLogoReveal {
+    from {
+      opacity: 0;
+      transform: scale(0.82);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes splashLogoFill {
+    from { fill: transparent; }
+    to   { fill: white; }
+  }
+
+  @keyframes splashSlideOut {
+    from { transform: translateY(0); }
+    to   { transform: translateY(100%); }
+  }
+
+  /* ─── Reduced Motion ─── */
+  @media (prefers-reduced-motion: reduce) {
+    .splash-overlay,
+    .splash-logo,
+    .logo-path,
+    .bubble {
+      animation-duration: 0.01s !important;
+      animation-delay: 0s !important;
+    }
+  }
+</style>
